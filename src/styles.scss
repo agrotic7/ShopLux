@@ -9,6 +9,9 @@
 /* Mobile Responsive Styles */
 @import 'styles-mobile.scss';
 
+/* Overflow Fixes - IMPORTANT: doit être après mobile */
+@import 'styles-overflow-fix.scss';
+
 /* ============================================
    GLOBAL STYLES
    ============================================ */
