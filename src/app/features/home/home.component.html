@@ -1,0 +1,324 @@
+<!-- ============================================
+     HERO - Minimaliste & Puissant
+     ============================================ -->
+<section class="relative min-h-screen flex items-center bg-white overflow-hidden">
+  <!-- Subtle Grid Background -->
+  <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(circle, #000 1px, transparent 1px); background-size: 40px 40px;"></div>
+  
+  <!-- Gradient Orb -->
+  <div class="absolute top-1/4 right-1/4 w-[800px] h-[800px] bg-gradient-to-br from-purple-200 via-pink-200 to-blue-200 rounded-full blur-3xl opacity-20 animate-pulse-slow"></div>
+
+  <div class="container mx-auto px-4 py-20 relative z-10">
+    <div class="max-w-6xl mx-auto">
+      <!-- Badge -->
+      <div class="inline-flex items-center space-x-2 px-4 py-2 bg-gray-100 rounded-full mb-8 animate-fadeIn">
+        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+        <span class="text-sm font-medium text-gray-700">Nouvelle Collection Disponible</span>
+      </div>
+
+      <!-- Main Title -->
+      <h1 class="text-7xl md:text-8xl lg:text-9xl font-black text-gray-900 mb-8 leading-none tracking-tighter animate-fadeInUp">
+        Shopping
+        <br/>
+        <span class="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
+          Réinventé
+        </span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="text-2xl md:text-3xl text-gray-600 mb-12 max-w-3xl font-light leading-relaxed animate-fadeInUp" style="animation-delay: 0.1s;">
+        Découvrez une sélection exclusive de produits premium. Simple, élégant, accessible.
+      </p>
+
+      <!-- CTA -->
+      <div class="flex flex-wrap gap-4 mb-20 animate-fadeInUp" style="animation-delay: 0.2s;">
+        <a routerLink="/products" class="group px-8 py-4 bg-gray-900 text-white rounded-2xl font-semibold hover:bg-gray-800 transition-all inline-flex items-center space-x-2 shadow-lg hover:shadow-xl">
+          <span>Explorer</span>
+          <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+          </svg>
+        </a>
+        <button class="px-8 py-4 border-2 border-gray-200 rounded-2xl font-semibold hover:border-gray-300 hover:bg-gray-50 transition-all">
+          En savoir plus
+        </button>
+      </div>
+
+      <!-- Stats - Clean -->
+      <div class="grid grid-cols-3 gap-8 max-w-2xl animate-fadeInUp" style="animation-delay: 0.3s;">
+        <div>
+          <div class="text-5xl font-black text-gray-900 mb-1">1M+</div>
+          <div class="text-sm text-gray-500 uppercase tracking-wider">Produits</div>
+        </div>
+        <div>
+          <div class="text-5xl font-black text-gray-900 mb-1">50K+</div>
+          <div class="text-sm text-gray-500 uppercase tracking-wider">Clients</div>
+        </div>
+        <div>
+          <div class="text-5xl font-black text-gray-900 mb-1">4.9★</div>
+          <div class="text-sm text-gray-500 uppercase tracking-wider">Note</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FEATURED PRODUCTS - Clean Grid
+     ============================================ -->
+<section class="py-32 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <div class="max-w-7xl mx-auto">
+      <!-- Header -->
+      <div class="mb-16">
+        <h2 class="text-6xl md:text-7xl font-black text-gray-900 mb-4 tracking-tight">
+          Sélection
+        </h2>
+        <p class="text-xl text-gray-600">Les produits que vous allez adorer</p>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div *ngFor="let product of featuredProducts; let i = index" 
+             class="group animate-fadeInUp"
+             [style.animation-delay]="(i * 0.05) + 's'">
+          <a [routerLink]="['/products', product.slug]" class="block">
+            <!-- Image -->
+            <div class="relative aspect-square bg-white rounded-3xl overflow-hidden mb-4 border border-gray-200 group-hover:border-gray-300 transition-all">
+              <img [src]="getProductImage(product)" [alt]="product.name" 
+                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+              
+              <!-- Badges -->
+              <div class="absolute top-4 left-4 flex flex-col gap-2">
+                <span *ngIf="getDiscountPercentage(product) > 0" class="px-3 py-1 bg-black text-white text-xs font-bold rounded-full">
+                  -{{ getDiscountPercentage(product) }}%
+                </span>
+                <span *ngIf="product.isNewArrival" class="px-3 py-1 bg-white text-black text-xs font-bold rounded-full">
+                  Nouveau
+                </span>
+              </div>
+
+              <!-- Stock Indicator -->
+              <div class="absolute bottom-4 left-4 right-4">
+                <div *ngIf="product.stock <= 5 && product.stock > 0" 
+                     class="px-3 py-2 bg-orange-500 text-white text-xs font-semibold rounded-full text-center">
+                  Plus que {{ product.stock }} en stock
+                </div>
+                <div *ngIf="product.stock > 5" 
+                     class="px-3 py-2 bg-green-500 text-white text-xs font-semibold rounded-full text-center">
+                  En stock
+                </div>
+                <div *ngIf="product.stock === 0" 
+                     class="px-3 py-2 bg-gray-900 text-white text-xs font-semibold rounded-full text-center">
+                  Rupture
+                </div>
+              </div>
+            </div>
+
+            <!-- Info -->
+            <div class="space-y-2">
+              <!-- Brand & Rating -->
+              <div class="flex items-center justify-between text-xs text-gray-500">
+                <span *ngIf="product.brand" class="font-medium uppercase tracking-wider">{{ product.brand }}</span>
+                <div class="flex items-center space-x-1">
+                  <svg class="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <span class="font-semibold">{{ product.rating || 4.5 }}</span>
+                </div>
+              </div>
+
+              <!-- Name -->
+              <h3 class="font-bold text-lg text-gray-900 line-clamp-2 group-hover:text-purple-600 transition-colors">
+                {{ product.name }}
+              </h3>
+
+              <!-- Price -->
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-2xl font-black text-gray-900">{{ product.price }}€</div>
+                  <div *ngIf="product.compareAtPrice" class="text-sm text-gray-400 line-through">
+                    {{ product.compareAtPrice }}€
+                  </div>
+                </div>
+                <button class="w-10 h-10 bg-gray-900 text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- View All -->
+      <div class="text-center mt-16">
+        <a routerLink="/products" class="inline-flex items-center space-x-2 px-8 py-4 border-2 border-gray-900 text-gray-900 rounded-2xl font-bold hover:bg-gray-900 hover:text-white transition-all">
+          <span>Voir tous les produits</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     CATEGORIES - Minimal Cards
+     ============================================ -->
+<section class="py-32 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-6xl md:text-7xl font-black text-gray-900 mb-16 tracking-tight">
+        Collections
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <a *ngFor="let category of categories.slice(0, 6); let i = index" 
+           [routerLink]="category.link"
+           class="group relative aspect-[4/5] overflow-hidden rounded-3xl bg-gray-100 animate-fadeInUp"
+           [style.animation-delay]="(i * 0.05) + 's'">
+          <img [src]="category.image" [alt]="category.name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-8">
+            <h3 class="text-3xl font-black text-white mb-2">{{ category.name }}</h3>
+            <div class="inline-flex items-center text-white text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+              <span>Explorer</span>
+              <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     WHY US - Simple Icons
+     ============================================ -->
+<section class="py-32 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-6xl md:text-7xl font-black text-gray-900 mb-16 tracking-tight text-center">
+        Pourquoi ShopLux
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div *ngFor="let feature of [
+          {icon: 'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4', title: 'Livraison Rapide', desc: 'Livraison à Dakar et dans tout le Sénégal'},
+          {icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', title: 'Paiement Sécurisé', desc: 'Wave, Orange Money, Carte bancaire'},
+          {icon: 'M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6', title: 'Retours Faciles', desc: '14 jours pour changer d\'avis'},
+          {icon: 'M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z', title: 'Support 24/7', desc: 'Une équipe à votre écoute'}
+        ]; let i = index" 
+             class="text-center animate-fadeInUp"
+             [style.animation-delay]="(i * 0.1) + 's'">
+          <div class="w-16 h-16 mx-auto mb-6 bg-gray-900 rounded-2xl flex items-center justify-center">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="feature.icon"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">{{ feature.title }}</h3>
+          <p class="text-gray-600">{{ feature.desc }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     NEWSLETTER - Minimal
+     ============================================ -->
+<section class="py-32 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-5xl md:text-6xl font-black text-gray-900 mb-6 tracking-tight">
+        Restez Informé
+      </h2>
+      <p class="text-xl text-gray-600 mb-12">
+        Recevez nos nouveautés et offres exclusives
+      </p>
+      
+      <form class="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
+        <input 
+          type="email" 
+          placeholder="votre@email.com" 
+          class="flex-1 px-6 py-4 bg-gray-100 border-2 border-transparent rounded-2xl focus:outline-none focus:border-gray-900 transition-colors text-lg"
+        />
+        <button class="px-8 py-4 bg-gray-900 text-white rounded-2xl font-bold hover:bg-gray-800 transition-colors whitespace-nowrap">
+          S'abonner
+        </button>
+      </form>
+
+      <p class="text-sm text-gray-500 mt-6">
+        -15% sur votre première commande en vous inscrivant
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SOCIAL PROOF - Clean
+     ============================================ -->
+<section class="py-32 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-6xl md:text-7xl font-black text-gray-900 mb-16 tracking-tight text-center">
+        Ils nous font confiance
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div *ngFor="let review of [
+          {name: 'Aminata Diallo', role: 'Dakar', text: 'ShopLux offre des produits de qualité avec une livraison rapide à Dakar. Je recommande!', rating: 5},
+          {name: 'Moussa Ndiaye', role: 'Thiès', text: 'Excellent service client et paiement sécurisé avec Wave et Orange Money. Parfait!', rating: 5},
+          {name: 'Fatou Sall', role: 'Saint-Louis', text: 'Une boutique moderne et facile à utiliser. Les meilleurs prix au Sénégal!', rating: 5}
+        ]; let i = index" 
+             class="bg-white p-8 rounded-3xl border border-gray-200 animate-fadeInUp"
+             [style.animation-delay]="(i * 0.1) + 's'">
+          <!-- Stars -->
+          <div class="flex text-yellow-400 mb-4">
+            <svg *ngFor="let star of [1,2,3,4,5]" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+            </svg>
+          </div>
+
+          <!-- Text -->
+          <p class="text-gray-700 text-lg mb-6">"{{ review.text }}"</p>
+
+          <!-- Author -->
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-yellow-300 rounded-full mr-4 flex items-center justify-center text-white font-bold text-lg">
+              {{ review.name.charAt(0) }}
+            </div>
+            <div>
+              <div class="font-bold text-gray-900">{{ review.name }}</div>
+              <div class="text-sm text-gray-500">{{ review.role }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     CTA FINAL - Bold
+     ============================================ -->
+<section class="py-32 bg-gray-900">
+  <div class="container mx-auto px-4 text-center">
+    <h2 class="text-6xl md:text-7xl font-black text-white mb-8 tracking-tight">
+      Prêt à commencer ?
+    </h2>
+    <p class="text-2xl text-gray-400 mb-12 max-w-2xl mx-auto">
+      Découvrez notre collection complète de produits premium
+    </p>
+    <a routerLink="/products" class="inline-flex items-center space-x-2 px-10 py-5 bg-white text-gray-900 rounded-2xl font-bold hover:bg-gray-100 transition-all text-lg">
+      <span>Explorer maintenant</span>
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+      </svg>
+    </a>
+  </div>
+</section>

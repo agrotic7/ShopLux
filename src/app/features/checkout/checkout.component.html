@@ -1,0 +1,739 @@
+<!-- Checkout Page -->
+<div class="min-h-screen bg-gray-50 py-12 animate-fadeInUp">
+  <div class="container mx-auto px-4">
+    
+    <!-- Page Header -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold text-gray-900 mb-2">Finaliser ma commande</h1>
+      <p class="text-gray-600">Complétez vos informations pour finaliser votre achat</p>
+    </div>
+
+    <!-- Progress Steps -->
+    <div class="mb-12">
+      <div class="flex items-center justify-between max-w-3xl mx-auto">
+        <div class="flex items-center flex-1">
+          <div class="flex items-center justify-center h-10 w-10 rounded-full bg-black text-white font-bold">1</div>
+          <div class="flex-1 h-1 bg-black mx-2"></div>
+        </div>
+        <div class="flex items-center flex-1">
+          <div class="flex items-center justify-center h-10 w-10 rounded-full" 
+               [class.bg-black]="currentStep >= 2"
+               [class.text-white]="currentStep >= 2"
+               [class.bg-gray-300]="currentStep < 2"
+               [class.text-gray-600]="currentStep < 2">2</div>
+          <div class="flex-1 h-1 mx-2"
+               [class.bg-black]="currentStep >= 2"
+               [class.bg-gray-300]="currentStep < 2"></div>
+        </div>
+        <div class="flex items-center">
+          <div class="flex items-center justify-center h-10 w-10 rounded-full"
+               [class.bg-black]="currentStep >= 3"
+               [class.text-white]="currentStep >= 3"
+               [class.bg-gray-300]="currentStep < 3"
+               [class.text-gray-600]="currentStep < 3">3</div>
+        </div>
+      </div>
+      <div class="flex items-center justify-between max-w-3xl mx-auto mt-2">
+        <span class="text-sm font-medium text-gray-900">Informations</span>
+        <span class="text-sm font-medium" [class.text-gray-900]="currentStep >= 2" [class.text-gray-500]="currentStep < 2">Livraison</span>
+        <span class="text-sm font-medium" [class.text-gray-900]="currentStep >= 3" [class.text-gray-500]="currentStep < 3">Paiement</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Main Form -->
+      <div class="lg:col-span-2 space-y-6">
+        
+        <!-- Step 1: Contact & Shipping Information -->
+        <div *ngIf="currentStep === 1" class="bg-white rounded-3xl border border-gray-200 p-8 shadow-lg space-y-6">
+          
+          <!-- Contact Information -->
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Informations de contact</h2>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                <input 
+                  type="email" 
+                  [(ngModel)]="checkoutForm.email"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all"
+                  placeholder="votre@email.com">
+              </div>
+              <div>
+                <label class="flex items-center space-x-2">
+                  <input 
+                    type="checkbox" 
+                    [(ngModel)]="checkoutForm.subscribeNewsletter"
+                    class="h-5 w-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                  <span class="text-sm text-gray-700">S'abonner à la newsletter pour recevoir des offres exclusives</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-t border-gray-200 pt-6"></div>
+
+          <!-- Shipping Address -->
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Adresse de livraison</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Prénom *</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="checkoutForm.shippingAddress.firstName"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nom *</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="checkoutForm.shippingAddress.lastName"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Adresse *</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="checkoutForm.shippingAddress.street"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all"
+                  placeholder="123 Rue de la Paix">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Ville *</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="checkoutForm.shippingAddress.city"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Code postal *</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="checkoutForm.shippingAddress.zipCode"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">État/Région *</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="checkoutForm.shippingAddress.state"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Pays *</label>
+                <select 
+                  [(ngModel)]="checkoutForm.shippingAddress.country"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+                  <option value="France">France</option>
+                  <option value="Belgique">Belgique</option>
+                  <option value="Suisse">Suisse</option>
+                  <option value="Luxembourg">Luxembourg</option>
+                  <option value="Canada">Canada</option>
+                </select>
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone *</label>
+                <input 
+                  type="tel" 
+                  [(ngModel)]="checkoutForm.shippingAddress.phone"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all"
+                  placeholder="+33 6 12 34 56 78">
+              </div>
+            </div>
+
+            <!-- Save Shipping Address -->
+            <div class="mt-4">
+              <label class="flex items-center space-x-2 cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="saveShippingAddress"
+                  class="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                <span class="text-sm text-gray-700">Enregistrer cette adresse pour mes prochaines commandes</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="border-t border-gray-200 pt-6"></div>
+
+          <!-- Billing Address -->
+          <div>
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-2xl font-bold text-gray-900">Adresse de facturation</h2>
+              <label class="flex items-center space-x-2">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="sameAsShipping"
+                  (change)="toggleBillingAddress()"
+                  class="h-5 w-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                <span class="text-sm font-medium text-gray-700">Identique à l'adresse de livraison</span>
+              </label>
+            </div>
+
+            <div *ngIf="!sameAsShipping" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Prénom *</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="checkoutForm.billingAddress.firstName"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nom *</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="checkoutForm.billingAddress.lastName"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Adresse *</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="checkoutForm.billingAddress.street"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Ville *</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="checkoutForm.billingAddress.city"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Code postal *</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="checkoutForm.billingAddress.zipCode"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">État/Région *</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="checkoutForm.billingAddress.state"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Pays *</label>
+                <select 
+                  [(ngModel)]="checkoutForm.billingAddress.country"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+                  <option value="France">France</option>
+                  <option value="Belgique">Belgique</option>
+                  <option value="Suisse">Suisse</option>
+                  <option value="Luxembourg">Luxembourg</option>
+                  <option value="Canada">Canada</option>
+                </select>
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone *</label>
+                <input 
+                  type="tel" 
+                  [(ngModel)]="checkoutForm.billingAddress.phone"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+              </div>
+            </div>
+
+            <!-- Save Billing Address -->
+            <div class="mt-4" *ngIf="!sameAsShipping">
+              <label class="flex items-center space-x-2 cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="saveBillingAddress"
+                  class="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                <span class="text-sm text-gray-700">Enregistrer cette adresse pour mes prochaines commandes</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Continue Button -->
+          <div class="flex justify-end pt-6">
+            <button 
+              (click)="nextStep()"
+              class="flex items-center space-x-2 px-8 py-4 bg-black text-white rounded-full hover:bg-gray-800 transition-colors font-semibold">
+              <span>Continuer vers la livraison</span>
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Shipping Method -->
+        <div *ngIf="currentStep === 2" class="bg-white rounded-3xl border border-gray-200 p-8 shadow-lg space-y-6">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Méthode de livraison</h2>
+
+          <!-- Loading State -->
+          <div *ngIf="isLoadingShipping" class="space-y-4">
+            <div *ngFor="let i of [1,2,3]" class="border-2 border-gray-200 rounded-2xl p-6 animate-pulse">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4 flex-1">
+                  <div class="h-6 w-6 rounded-full bg-gray-200"></div>
+                  <div class="flex-1 space-y-2">
+                    <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+                    <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+                    <div class="h-3 bg-gray-200 rounded w-2/3"></div>
+                  </div>
+                </div>
+                <div class="h-6 bg-gray-200 rounded w-20"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shipping Methods -->
+          <div *ngIf="!isLoadingShipping && shippingMethods.length > 0" class="space-y-4">
+            <div *ngFor="let method of shippingMethods" 
+                 (click)="selectShippingMethod(method)"
+                 [class.border-black]="selectedShippingMethod?.id === method.id"
+                 [class.border-gray-300]="selectedShippingMethod?.id !== method.id"
+                 class="border-2 rounded-2xl p-6 cursor-pointer hover:border-gray-400 transition-all">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                  <div class="h-6 w-6 rounded-full border-2 flex items-center justify-center"
+                       [class.border-black]="selectedShippingMethod?.id === method.id"
+                       [class.border-gray-300]="selectedShippingMethod?.id !== method.id">
+                    <div *ngIf="selectedShippingMethod?.id === method.id" class="h-3 w-3 rounded-full bg-black"></div>
+                  </div>
+                  <div>
+                    <p class="font-bold text-gray-900">{{ method.name }}</p>
+                    <p class="text-sm text-gray-600">{{ method.description }}</p>
+                    <p class="text-xs text-gray-500 mt-1">{{ method.estimatedDays }}</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="text-xl font-bold" [class.text-green-600]="method.price === 0" [class.text-gray-900]="method.price > 0">
+                    {{ method.price === 0 ? 'Gratuit' : currencyService.formatPrice(method.price) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- No Shipping Methods -->
+          <div *ngIf="!isLoadingShipping && shippingMethods.length === 0" class="text-center py-8">
+            <svg class="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"></path>
+            </svg>
+            <p class="text-gray-600 font-medium">Aucune méthode de livraison disponible</p>
+            <p class="text-gray-500 text-sm mt-2">Veuillez contacter le support</p>
+          </div>
+
+          <!-- Navigation Buttons -->
+          <div class="flex justify-between pt-6">
+            <button 
+              (click)="previousStep()"
+              class="flex items-center space-x-2 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-full hover:bg-gray-50 transition-colors font-medium">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              </svg>
+              <span>Retour</span>
+            </button>
+            <button 
+              (click)="nextStep()"
+              [disabled]="!selectedShippingMethod"
+              class="flex items-center space-x-2 px-8 py-4 bg-black text-white rounded-full hover:bg-gray-800 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
+              <span>Continuer vers le paiement</span>
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3: Payment Method -->
+        <div *ngIf="currentStep === 3" class="bg-white rounded-3xl border border-gray-200 p-8 shadow-lg space-y-6">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Méthode de paiement</h2>
+
+          <div class="space-y-4">
+            <div *ngFor="let method of paymentMethods" 
+                 (click)="selectPaymentMethod(method)"
+                 [class.border-black]="selectedPaymentMethod?.id === method.id"
+                 [class.border-gray-300]="selectedPaymentMethod?.id !== method.id"
+                 class="border-2 rounded-2xl p-6 cursor-pointer hover:border-gray-400 transition-all">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                  <div class="h-6 w-6 rounded-full border-2 flex items-center justify-center"
+                       [class.border-black]="selectedPaymentMethod?.id === method.id"
+                       [class.border-gray-300]="selectedPaymentMethod?.id !== method.id">
+                    <div *ngIf="selectedPaymentMethod?.id === method.id" class="h-3 w-3 rounded-full bg-black"></div>
+                  </div>
+                  <div>
+                    <p class="font-bold text-gray-900">{{ method.name }}</p>
+                    <p class="text-sm text-gray-600">{{ method.description }}</p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <!-- Emoji icon -->
+                  <span class="text-3xl">{{ method.icon }}</span>
+                  <!-- Image icons (if any) -->
+                  <img *ngFor="let icon of method.icons" [src]="icon" [alt]="method.name" class="h-8">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cash on Delivery Info -->
+          <div *ngIf="selectedPaymentMethod?.id === 'cash_on_delivery'" class="mt-6 space-y-4 p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border-2 border-green-200">
+            <div class="flex items-center space-x-3 mb-4">
+              <div class="h-12 w-12 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-2xl">💵</div>
+              <div>
+                <h4 class="font-bold text-gray-900 text-lg">Paiement à la livraison</h4>
+                <p class="text-xs text-gray-600">Payez en espèces quand vous recevez votre commande</p>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div class="p-4 bg-white rounded-xl border border-green-200">
+                <p class="text-sm text-gray-800 font-medium mb-2">✅ Comment ça marche ?</p>
+                <ol class="text-sm text-gray-600 space-y-2 ml-4 list-decimal">
+                  <li>Validez votre commande maintenant</li>
+                  <li>Nous préparons et expédions vos articles</li>
+                  <li>Vous payez en espèces au livreur à la réception</li>
+                  <li>Vous recevez votre commande immédiatement</li>
+                </ol>
+              </div>
+
+              <div class="p-4 bg-yellow-50 rounded-xl border border-yellow-200">
+                <p class="text-sm font-medium text-yellow-900 mb-2">⚠️ Important</p>
+                <ul class="text-xs text-yellow-800 space-y-1 ml-4 list-disc">
+                  <li>Ayez le <strong>montant exact</strong> si possible : <span class="font-bold">{{ getFinalTotal() | number:'1.0-0' }} FCFA</span></li>
+                  <li>Vérifiez votre colis avant de payer</li>
+                  <li>Demandez un reçu au livreur</li>
+                  <li>En cas d'absence, le livreur vous recontactera</li>
+                </ul>
+              </div>
+
+              <div class="p-4 bg-green-100 rounded-xl border border-green-300">
+                <p class="text-sm text-green-900">
+                  <strong>💚 Avantages :</strong> Pas besoin de carte bancaire • Paiement sécurisé • Vous payez uniquement si vous êtes satisfait
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Payment Form (if card selected) -->
+          <div *ngIf="selectedPaymentMethod?.id === 'card'" class="mt-6 space-y-4 p-6 bg-gray-50 rounded-2xl">
+            <div class="flex items-center space-x-2 mb-4">
+              <svg class="h-5 w-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+              <span class="text-sm text-gray-600">Paiement sécurisé par carte bancaire</span>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Numéro de carte *</label>
+              <input 
+                type="text" 
+                [(ngModel)]="paymentForm.cardNumber"
+                placeholder="1234 5678 9012 3456"
+                maxlength="19"
+                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Date d'expiration *</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="paymentForm.expiryDate"
+                  placeholder="MM/AA"
+                  maxlength="5"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">CVV *</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="paymentForm.cvv"
+                  placeholder="123"
+                  maxlength="3"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Nom sur la carte *</label>
+              <input 
+                type="text" 
+                [(ngModel)]="paymentForm.cardName"
+                placeholder="JEAN DUPONT"
+                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+            </div>
+            
+            <div class="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-200">
+              <p class="text-xs text-blue-800">
+                <strong>Mode développement:</strong> Pour tester, utilisez n'importe quel numéro de carte valide. Le paiement sera simulé avec un taux de réussite de 95%.
+              </p>
+            </div>
+          </div>
+
+          <!-- Wave Money Form (if wave selected) -->
+          <div *ngIf="selectedPaymentMethod?.id === 'wave'" class="mt-6 space-y-4 p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl border-2 border-blue-200">
+            <div class="flex items-center space-x-3 mb-4">
+              <img src="/assets/wave.png" alt="Wave Money" class="h-10 w-10 rounded-full object-cover">
+              <div>
+                <h4 class="font-bold text-gray-900">Wave Money</h4>
+                <p class="text-xs text-gray-600">Paiement mobile</p>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Numéro Wave *</label>
+              <input 
+                type="tel" 
+                [(ngModel)]="paymentForm.mobileNumber"
+                placeholder="+221 77 123 45 67"
+                class="w-full px-4 py-3 rounded-xl border-2 border-blue-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all bg-white">
+            </div>
+          </div>
+
+          <!-- Orange Money Form (if orange_money selected) -->
+          <div *ngIf="selectedPaymentMethod?.id === 'orange_money'" class="mt-6 space-y-4 p-6 bg-gradient-to-br from-orange-50 to-yellow-50 rounded-2xl border-2 border-orange-200">
+            <div class="flex items-center space-x-3 mb-4">
+              <img src="/assets/OM.png" alt="Orange Money" class="h-10 w-10 rounded-full object-cover">
+              <div>
+                <h4 class="font-bold text-gray-900">Orange Money</h4>
+                <p class="text-xs text-gray-600">Paiement mobile</p>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Numéro Orange Money *</label>
+              <input 
+                type="tel" 
+                [(ngModel)]="paymentForm.mobileNumber"
+                placeholder="+221 77 123 45 67"
+                class="w-full px-4 py-3 rounded-xl border-2 border-orange-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition-all bg-white">
+            </div>
+          </div>
+
+          <!-- Bank Transfer Info (if bank_transfer selected) -->
+          <div *ngIf="selectedPaymentMethod?.id === 'bank_transfer'" class="mt-6 space-y-4 p-6 bg-gray-50 rounded-2xl border-2 border-gray-200">
+            <div class="flex items-center space-x-3 mb-4">
+              <div class="h-10 w-10 bg-gray-600 rounded-full flex items-center justify-center">
+                <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-bold text-gray-900">Virement Bancaire</h4>
+                <p class="text-xs text-gray-600">Paiement par virement BCEAO</p>
+              </div>
+            </div>
+
+            <div class="p-4 bg-gray-100 rounded-xl">
+              <h5 class="font-semibold text-gray-900 mb-2">Coordonnées bancaires :</h5>
+              <div class="space-y-1 text-sm text-gray-700">
+                <p><strong>Banque:</strong> BCEAO Dakar</p>
+                <p><strong>Titulaire:</strong> ShopLux SARL</p>
+                <p><strong>IBAN:</strong> SN08 0000 0000 0000 0000 0000</p>
+                <p><strong>Code SWIFT:</strong> BCXXX00</p>
+                <p class="text-xs text-gray-500 mt-2">
+                  ⚠️ Veuillez inclure votre numéro de commande dans le libellé du virement
+                </p>
+              </div>
+            </div>
+
+            <div class="p-4 bg-yellow-50 rounded-xl border border-yellow-200">
+              <p class="text-xs text-yellow-900">
+                <strong>Note:</strong> Votre commande sera traitée après réception du virement (délai 1-3 jours ouvrés).
+              </p>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Notes de commande (optionnel)</label>
+            <textarea 
+              [(ngModel)]="checkoutForm.notes"
+              rows="3"
+              class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all resize-none"
+              placeholder="Des instructions spéciales pour votre commande ?"></textarea>
+          </div>
+
+          <!-- Terms & Conditions -->
+          <div class="p-6 bg-gray-50 rounded-2xl">
+            <label class="flex items-start space-x-3">
+              <input 
+                type="checkbox" 
+                [(ngModel)]="acceptTerms"
+                class="mt-1 h-5 w-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+              <span class="text-sm text-gray-700">
+                J'accepte les <a href="#" class="text-purple-600 hover:text-purple-700 font-medium">conditions générales de vente</a> 
+                et la <a href="#" class="text-purple-600 hover:text-purple-700 font-medium">politique de confidentialité</a>
+              </span>
+            </label>
+          </div>
+
+          <!-- Navigation Buttons -->
+          <div class="flex justify-between pt-6">
+            <button 
+              (click)="previousStep()"
+              class="flex items-center space-x-2 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-full hover:bg-gray-50 transition-colors font-medium">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              </svg>
+              <span>Retour</span>
+            </button>
+            <button 
+              (click)="placeOrder()"
+              [disabled]="!selectedPaymentMethod || !acceptTerms || isProcessing"
+              class="flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full hover:from-purple-700 hover:to-pink-700 transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-lg">
+              <svg *ngIf="!isProcessing" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <div *ngIf="isProcessing" class="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+              <span>{{ isProcessing ? 'Traitement...' : 'Valider la commande - ' + getFinalTotal() + ' FCFA' }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary Sidebar -->
+      <div class="lg:col-span-1">
+        <div class="bg-white rounded-3xl border border-gray-200 p-8 shadow-lg sticky top-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Résumé de la commande</h2>
+
+          <!-- Cart Items -->
+          <div class="space-y-4 mb-6 max-h-96 overflow-y-auto">
+            <div *ngFor="let item of cartItems" class="flex items-center space-x-4 pb-4 border-b border-gray-200">
+              <div class="relative h-20 w-20 rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0">
+                <img [src]="item.product.image" [alt]="item.product.name" class="h-full w-full object-cover">
+                <div class="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-black text-white flex items-center justify-center text-xs font-bold">
+                  {{ item.quantity }}
+                </div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="font-medium text-gray-900 truncate">{{ item.product.name }}</p>
+                <p class="text-sm text-gray-600">{{ item.price | currency:'XOF':'symbol':'1.0-0':'fr' }}</p>
+              </div>
+              <div class="font-bold text-gray-900">
+                {{ (item.price * item.quantity) | currency:'XOF':'symbol':'1.0-0':'fr' }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Coupon Code -->
+          <div class="mb-6">
+            <div class="flex space-x-2">
+              <input 
+                type="text" 
+                [(ngModel)]="couponCode"
+                placeholder="Code promo"
+                class="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+              <button 
+                (click)="applyCoupon()"
+                class="px-6 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors font-medium">
+                Appliquer
+              </button>
+            </div>
+            <p *ngIf="appliedCoupon" class="text-sm text-green-600 mt-2 flex items-center">
+              <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              Code promo appliqué: {{ appliedCoupon.code }}
+            </p>
+          </div>
+
+          <!-- Price Summary -->
+          <div class="space-y-3 py-6 border-t border-gray-200">
+            <div class="flex justify-between text-gray-600">
+              <span>Sous-total</span>
+              <span class="font-medium">{{ getSubtotal() | currency:'XOF':'symbol':'1.0-0':'fr' }}</span>
+            </div>
+
+            <div *ngIf="appliedCoupon" class="flex justify-between text-green-600">
+              <span>Réduction ({{ appliedCoupon.code }})</span>
+              <span class="font-medium">-{{ getDiscount() | currency:'XOF':'symbol':'1.0-0':'fr' }}</span>
+            </div>
+
+            <div class="flex justify-between text-gray-600">
+              <span>Livraison</span>
+              <span class="font-medium" [class.text-green-600]="selectedShippingMethod?.price === 0">
+                <ng-container *ngIf="selectedShippingMethod">
+                  {{ selectedShippingMethod.price === 0 ? 'Gratuit' : currencyService.formatPrice(selectedShippingMethod.price) }}
+                  <span class="text-xs text-gray-500 ml-1">({{ selectedShippingMethod.name }})</span>
+                </ng-container>
+                <ng-container *ngIf="!selectedShippingMethod">-</ng-container>
+              </span>
+            </div>
+
+            <div class="flex justify-between text-gray-600">
+              <span>TVA (20%)</span>
+              <span class="font-medium">{{ getTax() | currency:'XOF':'symbol':'1.0-0':'fr' }}</span>
+            </div>
+
+            <div class="flex justify-between text-xl font-bold text-gray-900 pt-3 border-t border-gray-200">
+              <span>Total</span>
+              <span>{{ getFinalTotal() | currency:'XOF':'symbol':'1.0-0':'fr' }}</span>
+            </div>
+          </div>
+
+          <!-- Trust Badges -->
+          <div class="grid grid-cols-3 gap-3 pt-6 border-t border-gray-200">
+            <div class="text-center">
+              <div class="h-10 w-10 mx-auto mb-2 rounded-full bg-green-100 flex items-center justify-center">
+                <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+              </div>
+              <p class="text-xs font-medium text-gray-900">Paiement sécurisé</p>
+            </div>
+            <div class="text-center">
+              <div class="h-10 w-10 mx-auto mb-2 rounded-full bg-blue-100 flex items-center justify-center">
+                <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <p class="text-xs font-medium text-gray-900">Satisfait ou remboursé</p>
+            </div>
+            <div class="text-center">
+              <div class="h-10 w-10 mx-auto mb-2 rounded-full bg-purple-100 flex items-center justify-center">
+                <svg class="h-5 w-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <p class="text-xs font-medium text-gray-900">Livraison rapide</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

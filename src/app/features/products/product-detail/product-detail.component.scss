@@ -1,0 +1,22 @@
+// Product Detail Component Styles
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Smooth transitions for image gallery
+img {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Custom scrollbar for specifications
+:host ::ng-deep .prose {
+  max-width: none;
+  
+  p {
+    margin-bottom: 1rem;
+  }
+}
