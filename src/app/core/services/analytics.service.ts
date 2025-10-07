@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 declare let gtag: Function;
 
@@ -8,7 +9,7 @@ declare let gtag: Function;
   providedIn: 'root'
 })
 export class AnalyticsService {
-  private measurementId = 'G-CDQJPD85DY'; // Remplacez par votre ID GA4
+  private measurementId = environment.ga4.measurementId;
 
   constructor(private router: Router) {
     this.initializeGoogleAnalytics();
