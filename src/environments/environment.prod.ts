@@ -1,15 +1,15 @@
 export const environment = {
   production: true,
   supabase: {
-    url: process.env['SUPABASE_URL'] || '',
-    anonKey: process.env['SUPABASE_ANON_KEY'] || '',
+    url: 'https://tepiaptcwcrahugnfmcq.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlcGlhcHRjd2NyYWh1Z25mbWNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk3NTg3ODIsImV4cCI6MjA3NTMzNDc4Mn0.tqdUV3r918BZ5X3wOveuap66mTgRh7HTJqDIW3o-8Iw'
   },
-  apiUrl: process.env['API_URL'] || 'https://votre-domaine.vercel.app/api',
+  apiUrl: 'https://votre-domaine.vercel.app/api',
   stripe: {
-    publishableKey: process.env['STRIPE_PUBLISHABLE_KEY'] || ''
+    publishableKey: 'YOUR_STRIPE_PUBLISHABLE_KEY'
   },
   ga4: {
-    measurementId: process.env['GA4_MEASUREMENT_ID'] || ''
+    measurementId: 'G-CDQJPD85DY'
   }
 };
 
