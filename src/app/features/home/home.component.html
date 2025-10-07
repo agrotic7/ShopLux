@@ -281,25 +281,25 @@
             </div>
 
                 <!-- Product Info -->
-                <div class="p-3 md:p-4 space-y-2">
-              <!-- Brand & Rating -->
-                  <div class="flex items-center justify-between text-xs">
+                <div class="p-3 md:p-4">
+                  <!-- Brand & Rating -->
+                  <div class="flex items-center justify-between text-xs mb-1.5">
                     <span *ngIf="product.brand" class="text-purple-600 font-bold uppercase tracking-wider">{{ product.brand }}</span>
-                <div class="flex items-center space-x-1">
+                    <div class="flex items-center space-x-1">
                       <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
                         <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
-                  </svg>
+                      </svg>
                       <span class="font-bold text-gray-900">{{ product.rating || 4.5 }}</span>
-                </div>
-              </div>
+                    </div>
+                  </div>
 
                   <!-- Product Name -->
-                  <h3 class="font-bold text-sm md:text-base text-gray-900 line-clamp-2 group-hover:text-purple-600 transition-colors leading-tight">
-                {{ product.name }}
-              </h3>
+                  <h3 class="font-bold text-sm md:text-base text-gray-900 line-clamp-2 group-hover:text-purple-600 transition-colors leading-tight mb-2">
+                    {{ product.name }}
+                  </h3>
 
                   <!-- Price & Add to Cart -->
-                  <div class="flex items-center justify-between pt-1">
+                  <div class="flex items-center justify-between">
                     <div class="flex flex-col">
                       <span class="text-lg md:text-xl font-black text-gray-900">{{ product.price }} FCFA</span>
                       <span *ngIf="product.compareAtPrice" class="text-xs text-gray-400 line-through">
@@ -313,7 +313,7 @@
                       </svg>
                     </button>
                   </div>
-              </div>
+                </div>
             </div>
           </a>
         </div>
