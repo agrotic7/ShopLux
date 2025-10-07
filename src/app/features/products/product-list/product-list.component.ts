@@ -7,6 +7,7 @@ import { Product, ProductFilter, Category } from '../../../core/models/product.m
 import { CartService } from '../../../core/services/cart.service';
 import { CurrencyService } from '../../../core/services/currency.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { AnalyticsService } from '../../../core/services/analytics.service';
 import { LazyImageComponent } from '../../../shared/components/lazy-image/lazy-image.component';
 import { LoadingSkeletonComponent } from '../../../shared/components/loading-skeleton/loading-skeleton.component';
 
@@ -39,9 +40,9 @@ export class ProductListComponent implements OnInit {
     private productService: ProductService,
     private cartService: CartService,
     private route: ActivatedRoute,
-    public currencyService: CurrencyService
-  ,
-    private toastService: ToastService
+    public currencyService: CurrencyService,
+    private toastService: ToastService,
+    private analyticsService: AnalyticsService
   ) {}
 
   async ngOnInit() {
@@ -170,6 +171,24 @@ export class ProductListComponent implements OnInit {
   loadMore() {
     this.filter.page = (this.filter.page || 1) + 1;
     this.loadProducts();
+  }
+
+  onProductClick(product: Product) {
+    // Track product view
+    this.analyticsService.trackViewItem({
+      item_id: product.id.toString(),
+      item_name: product.name,
+      category: product.category?.name || 'Général',
+      price: product.price,
+      currency: 'XOF',
+      item_brand: 'ShopLux'
+    });
+  }
+
+  onSearch(searchTerm: string) {
+    if (searchTerm.trim()) {
+      this.analyticsService.trackSearch(searchTerm, this.products.length);
+    }
   }
 }
 

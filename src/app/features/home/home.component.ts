@@ -5,6 +5,7 @@ import { ProductService } from '../../core/services/product.service';
 import { Product } from '../../core/models/product.model';
 import { LazyImageComponent } from '../../shared/components/lazy-image/lazy-image.component';
 import { LoadingSkeletonComponent } from '../../shared/components/loading-skeleton/loading-skeleton.component';
+import { AnalyticsService } from '../../core/services/analytics.service';
 
 @Component({
   selector: 'app-home',
@@ -62,11 +63,21 @@ export class HomeComponent implements OnInit {
 
   currentBannerIndex = 0;
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private analyticsService: AnalyticsService
+  ) {}
 
   ngOnInit() {
     this.loadProducts();
     this.startBannerRotation();
+    
+    // Track page view
+    this.analyticsService.trackCustomEvent('page_view', {
+      page_title: 'Accueil',
+      page_location: window.location.href,
+      content_group: 'home'
+    });
   }
 
   async loadProducts() {
@@ -120,6 +131,27 @@ export class HomeComponent implements OnInit {
   getDiscountPercentage(product: Product): number {
     if (!product.compareAtPrice) return 0;
     return Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100);
+  }
+
+  onProductClick(product: Product) {
+    // Track product view
+    this.analyticsService.trackViewItem({
+      item_id: product.id.toString(),
+      item_name: product.name,
+      category: product.category?.name || 'Général',
+      price: product.price,
+      currency: 'XOF',
+      item_brand: 'ShopLux',
+      item_variant: product.variants?.[0]?.name
+    });
+  }
+
+  onExploreClick() {
+    this.analyticsService.trackLinkClick('Explorer', '/products', 'cta');
+  }
+
+  onLearnMoreClick() {
+    this.analyticsService.trackLinkClick('En savoir plus', '#about', 'cta');
   }
 }
 

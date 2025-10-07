@@ -32,13 +32,15 @@
 
       <!-- CTA -->
       <div class="flex flex-wrap gap-3 md:gap-4 mb-12 md:mb-20 animate-fadeInUp" style="animation-delay: 0.2s;">
-        <a routerLink="/products" class="group px-8 py-4 bg-gray-900 text-white rounded-2xl font-semibold hover:bg-gray-800 transition-all inline-flex items-center space-x-2 shadow-lg hover:shadow-xl">
+        <a routerLink="/products" 
+           (click)="onExploreClick()"
+           class="group px-8 py-4 bg-gray-900 text-white rounded-2xl font-semibold hover:bg-gray-800 transition-all inline-flex items-center space-x-2 shadow-lg hover:shadow-xl">
           <span>Explorer</span>
           <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
           </svg>
         </a>
-        <button class="px-8 py-4 border-2 border-gray-200 rounded-2xl font-semibold hover:border-gray-300 hover:bg-gray-50 transition-all">
+        <button (click)="onLearnMoreClick()" class="px-8 py-4 border-2 border-gray-200 rounded-2xl font-semibold hover:border-gray-300 hover:bg-gray-50 transition-all">
           En savoir plus
         </button>
       </div>
@@ -90,7 +92,9 @@
           <div *ngFor="let product of featuredProducts; let i = index" 
                class="group animate-fadeInUp"
                [style.animation-delay]="(i * 0.05) + 's'">
-          <a [routerLink]="['/products', product.slug]" class="block">
+          <a [routerLink]="['/products', product.slug]" 
+             (click)="onProductClick(product)"
+             class="block">
             <!-- Image -->
             <div class="relative aspect-square bg-white rounded-2xl md:rounded-3xl overflow-hidden mb-2 md:mb-4 border border-gray-200 group-hover:border-gray-300 transition-all">
               <app-lazy-image 

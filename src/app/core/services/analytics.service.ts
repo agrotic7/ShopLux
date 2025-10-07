@@ -1,252 +1,289 @@
 import { Injectable } from '@angular/core';
-import { SupabaseService } from './supabase.service';
-import { AuthService } from './auth.service';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
-export interface ProductView {
-  id: string;
-  productId: string;
-  userId?: string;
-  sessionId: string;
-  ipAddress?: string;
-  userAgent?: string;
-  referrer?: string;
-  viewedAt: Date;
-}
-
-export interface AbandonedCart {
-  id: string;
-  userId?: string;
-  email?: string;
-  cartData: any;
-  totalAmount: number;
-  reminderSent: boolean;
-  reminderSentAt?: Date;
-  convertedToOrderId?: string;
-  createdAt: Date;
-}
+declare let gtag: Function;
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnalyticsService {
-  private sessionId: string;
+  private measurementId = 'G-XXXXXXXXXX'; // Remplacez par votre ID GA4
 
-  constructor(
-    private supabase: SupabaseService,
-    private authService: AuthService
-  ) {
-    // Générer un ID de session unique
-    this.sessionId = this.generateSessionId();
+  constructor(private router: Router) {
+    this.initializeGoogleAnalytics();
+    this.trackPageViews();
   }
 
-  /**
-   * Tracker une vue de produit
-   */
-  async trackProductView(productId: string, referrer?: string): Promise<void> {
-    try {
-      const user = this.supabase.currentUser;
-      
-      const { error } = await this.supabase.client
-        .from('product_views')
-        .insert({
-          product_id: productId,
-          user_id: user?.id || null,
-          session_id: this.sessionId,
-          user_agent: navigator.userAgent,
-          referrer: referrer || document.referrer,
-          viewed_at: new Date().toISOString()
-        });
+  private initializeGoogleAnalytics() {
+    // Charger le script Google Analytics
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${this.measurementId}`;
+    document.head.appendChild(script);
 
-      if (error) {
-        console.error('Error tracking product view:', error);
-      }
-    } catch (error) {
-      console.error('Error tracking product view:', error);
+    // Initialiser gtag
+    window.dataLayer = window.dataLayer || [];
+    function gtag(...args: any[]) {
+      window.dataLayer.push(args);
     }
+    window.gtag = gtag;
+
+    gtag('js', new Date());
+    gtag('config', this.measurementId, {
+      page_title: document.title,
+      page_location: window.location.href,
+      send_page_view: false // On gère manuellement les page views
+    });
   }
 
-  /**
-   * Sauvegarder un panier abandonné
-   */
-  async saveAbandonedCart(
-    cartData: any,
-    totalAmount: number,
-    email?: string
-  ): Promise<boolean> {
-    try {
-      const user = this.supabase.currentUser;
-      
-      const { error } = await this.supabase.client
-        .from('abandoned_carts')
-        .insert({
-          user_id: user?.id || null,
-          email: email || user?.email || null,
-          cart_data: cartData,
-          total_amount: totalAmount,
-          reminder_sent: false
+  private trackPageViews() {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        gtag('config', this.measurementId, {
+          page_path: event.urlAfterRedirects,
+          page_title: document.title,
+          page_location: window.location.href
         });
-
-      if (error) {
-        console.error('Error saving abandoned cart:', error);
-        return false;
-      }
-
-      return true;
-    } catch (error) {
-      console.error('Error saving abandoned cart:', error);
-      return false;
-    }
-  }
-
-  /**
-   * Récupérer les statistiques de vues de produits (admin)
-   */
-  async getProductViewsStats(productId?: string, days: number = 30): Promise<any> {
-    try {
-      const since = new Date();
-      since.setDate(since.getDate() - days);
-
-      let query = this.supabase.client
-        .from('product_views')
-        .select('*')
-        .gte('viewed_at', since.toISOString());
-
-      if (productId) {
-        query = query.eq('product_id', productId);
-      }
-
-      const { data, error } = await query;
-
-      if (error) {
-        console.error('Error fetching product views:', error);
-        return null;
-      }
-
-      // Compter les vues par produit
-      const viewsByProduct: { [key: string]: number } = {};
-      const uniqueVisitors = new Set<string>();
-
-      data?.forEach(view => {
-        viewsByProduct[view.product_id] = (viewsByProduct[view.product_id] || 0) + 1;
-        if (view.user_id) {
-          uniqueVisitors.add(view.user_id);
-        } else {
-          uniqueVisitors.add(view.session_id);
-        }
       });
+  }
 
-      return {
-        totalViews: data?.length || 0,
-        uniqueVisitors: uniqueVisitors.size,
-        viewsByProduct,
-        rawData: data
-      };
-    } catch (error) {
-      console.error('Error fetching product views stats:', error);
-      return null;
-    }
+  // ===== ÉVÉNEMENTS E-COMMERCE =====
+
+  /**
+   * Track un produit vu
+   */
+  trackViewItem(item: {
+    item_id: string;
+    item_name: string;
+    category: string;
+    price: number;
+    currency: string;
+    item_brand?: string;
+    item_variant?: string;
+  }) {
+    gtag('event', 'view_item', {
+      currency: item.currency,
+      value: item.price,
+      items: [{
+        item_id: item.item_id,
+        item_name: item.item_name,
+        category: item.category,
+        price: item.price,
+        currency: item.currency,
+        item_brand: item.item_brand,
+        item_variant: item.item_variant
+      }]
+    });
   }
 
   /**
-   * Récupérer les paniers abandonnés (admin)
+   * Track un produit ajouté au panier
    */
-  async getAbandonedCarts(
-    includeConverted: boolean = false
-  ): Promise<AbandonedCart[]> {
-    try {
-      let query = this.supabase.client
-        .from('abandoned_carts')
-        .select('*')
-        .order('created_at', { ascending: false });
+  trackAddToCart(item: {
+    item_id: string;
+    item_name: string;
+    category: string;
+    price: number;
+    quantity: number;
+    currency: string;
+    item_brand?: string;
+    item_variant?: string;
+  }) {
+    gtag('event', 'add_to_cart', {
+      currency: item.currency,
+      value: item.price * item.quantity,
+      items: [{
+        item_id: item.item_id,
+        item_name: item.item_name,
+        category: item.category,
+        price: item.price,
+        quantity: item.quantity,
+        currency: item.currency,
+        item_brand: item.item_brand,
+        item_variant: item.item_variant
+      }]
+    });
+  }
 
-      if (!includeConverted) {
-        query = query.is('converted_to_order_id', null);
+  /**
+   * Track un produit retiré du panier
+   */
+  trackRemoveFromCart(item: {
+    item_id: string;
+    item_name: string;
+    category: string;
+    price: number;
+    quantity: number;
+    currency: string;
+  }) {
+    gtag('event', 'remove_from_cart', {
+      currency: item.currency,
+      value: item.price * item.quantity,
+      items: [{
+        item_id: item.item_id,
+        item_name: item.item_name,
+        category: item.category,
+        price: item.price,
+        quantity: item.quantity,
+        currency: item.currency
+      }]
+    });
+  }
+
+  /**
+   * Track le début du processus de commande
+   */
+  trackBeginCheckout(items: Array<{
+    item_id: string;
+    item_name: string;
+    category: string;
+    price: number;
+    quantity: number;
+    currency: string;
+  }>, value: number, currency: string) {
+    gtag('event', 'begin_checkout', {
+      currency: currency,
+      value: value,
+      items: items
+    });
+  }
+
+  /**
+   * Track une commande complétée
+   */
+  trackPurchase(transaction: {
+    transaction_id: string;
+    value: number;
+    currency: string;
+    items: Array<{
+      item_id: string;
+      item_name: string;
+      category: string;
+      price: number;
+      quantity: number;
+      currency: string;
+    }>;
+    shipping?: number;
+    tax?: number;
+  }) {
+    gtag('event', 'purchase', {
+      transaction_id: transaction.transaction_id,
+      currency: transaction.currency,
+      value: transaction.value,
+      shipping: transaction.shipping || 0,
+      tax: transaction.tax || 0,
+      items: transaction.items
+    });
+  }
+
+  // ===== ÉVÉNEMENTS GÉNÉRAUX =====
+
+  /**
+   * Track une recherche
+   */
+  trackSearch(searchTerm: string, resultsCount?: number) {
+    gtag('event', 'search', {
+      search_term: searchTerm,
+      results_count: resultsCount
+    });
+  }
+
+  /**
+   * Track un clic sur un lien
+   */
+  trackLinkClick(linkText: string, linkUrl: string, linkCategory?: string) {
+    gtag('event', 'click', {
+      link_text: linkText,
+      link_url: linkUrl,
+      link_category: linkCategory || 'general'
+    });
+  }
+
+  /**
+   * Track un scroll
+   */
+  trackScroll(depth: number) {
+    gtag('event', 'scroll', {
+      scroll_depth: depth
+    });
+  }
+
+  /**
+   * Track un engagement (temps sur page)
+   */
+  trackEngagement(timeOnPage: number, pageTitle: string) {
+    gtag('event', 'engagement_time_msec', {
+      engagement_time_msec: timeOnPage,
+      page_title: pageTitle
+    });
+  }
+
+  /**
+   * Track un événement personnalisé
+   */
+  trackCustomEvent(eventName: string, parameters?: { [key: string]: any }) {
+    gtag('event', eventName, parameters);
+  }
+
+  /**
+   * Track une erreur
+   */
+  trackError(errorMessage: string, errorLocation?: string) {
+    gtag('event', 'exception', {
+      description: errorMessage,
+      fatal: false,
+      custom_map: {
+        error_location: errorLocation
       }
-
-      const { data, error } = await query;
-
-      if (error) {
-        console.error('Error fetching abandoned carts:', error);
-        return [];
-      }
-
-      return data ? data.map(c => this.mapAbandonedCart(c)) : [];
-    } catch (error) {
-      console.error('Error fetching abandoned carts:', error);
-      return [];
-    }
+    });
   }
 
   /**
-   * Marquer un panier comme converti
+   * Track un utilisateur connecté
    */
-  async markCartAsConverted(cartId: string, orderId: string): Promise<boolean> {
-    try {
-      const { error } = await this.supabase.client
-        .from('abandoned_carts')
-        .update({
-          converted_to_order_id: orderId
-        })
-        .eq('id', cartId);
-
-      if (error) {
-        console.error('Error marking cart as converted:', error);
-        return false;
-      }
-
-      return true;
-    } catch (error) {
-      console.error('Error marking cart as converted:', error);
-      return false;
-    }
+  trackUserLogin(userId: string, method: string = 'email') {
+    gtag('config', this.measurementId, {
+      user_id: userId
+    });
+    
+    gtag('event', 'login', {
+      method: method
+    });
   }
 
   /**
-   * Récupérer les produits les plus vus
+   * Track un utilisateur déconnecté
    */
-  async getMostViewedProducts(limit: number = 10, days: number = 30): Promise<any[]> {
-    try {
-      const stats = await this.getProductViewsStats(undefined, days);
-      
-      if (!stats) return [];
-
-      // Trier par nombre de vues
-      const sorted = Object.entries(stats.viewsByProduct)
-        .sort(([, a], [, b]) => (b as number) - (a as number))
-        .slice(0, limit);
-
-      return sorted.map(([productId, views]) => ({
-        productId,
-        views
-      }));
-    } catch (error) {
-      console.error('Error getting most viewed products:', error);
-      return [];
-    }
+  trackUserLogout() {
+    gtag('event', 'logout');
   }
 
   /**
-   * Générer un ID de session unique
+   * Track un abonnement newsletter
    */
-  private generateSessionId(): string {
-    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  trackNewsletterSignup(method: string = 'email') {
+    gtag('event', 'sign_up', {
+      method: method
+    });
   }
 
   /**
-   * Mapper les données Supabase vers le modèle AbandonedCart
+   * Track un partage social
    */
-  private mapAbandonedCart(data: any): AbandonedCart {
-    return {
-      id: data.id,
-      userId: data.user_id,
-      email: data.email,
-      cartData: data.cart_data,
-      totalAmount: parseFloat(data.total_amount),
-      reminderSent: data.reminder_sent,
-      reminderSentAt: data.reminder_sent_at ? new Date(data.reminder_sent_at) : undefined,
-      convertedToOrderId: data.converted_to_order_id,
-      createdAt: new Date(data.created_at)
-    };
+  trackSocialShare(platform: string, content: string) {
+    gtag('event', 'share', {
+      method: platform,
+      content_type: content
+    });
   }
 }
 
+// Déclaration globale pour TypeScript
+declare global {
+  interface Window {
+    dataLayer: any[];
+    gtag: Function;
+  }
+}

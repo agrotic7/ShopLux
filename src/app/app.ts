@@ -5,12 +5,14 @@ import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { ToastComponent } from './shared/components/toast/toast.component';
 import { PwaInstallComponent } from './shared/components/pwa-install/pwa-install.component';
+import { ScrollTrackerComponent } from './shared/components/scroll-tracker/scroll-tracker.component';
+import { ErrorTrackerComponent } from './shared/components/error-tracker/error-tracker.component';
 import { ScrollService } from './core/services/scroll.service';
 import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, ToastComponent, PwaInstallComponent, CommonModule],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, ToastComponent, PwaInstallComponent, ScrollTrackerComponent, ErrorTrackerComponent, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

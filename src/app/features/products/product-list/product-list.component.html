@@ -134,7 +134,9 @@
         <!-- Products Grid -->
         <div *ngIf="!isLoading" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
           <div *ngFor="let product of products" class="group">
-            <a [routerLink]="['/products', product.slug]" class="block">
+            <a [routerLink]="['/products', product.slug]" 
+               (click)="onProductClick(product)"
+               class="block">
               <div class="relative overflow-hidden rounded-lg md:rounded-xl bg-white shadow-md hover:shadow-xl transition">
                 <div class="aspect-square overflow-hidden">
                   <app-lazy-image 
