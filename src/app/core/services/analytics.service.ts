@@ -8,7 +8,7 @@ declare let gtag: Function;
   providedIn: 'root'
 })
 export class AnalyticsService {
-  private measurementId = 'G-XXXXXXXXXX'; // Remplacez par votre ID GA4
+  private measurementId = 'G-CDQJPD85DY'; // Remplacez par votre ID GA4
 
   constructor(private router: Router) {
     this.initializeGoogleAnalytics();
