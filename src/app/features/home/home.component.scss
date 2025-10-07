@@ -5,3 +5,11 @@
   overflow: hidden;
 }
 
+// Responsive improvements for mobile
+@media (max-width: 640px) {
+  // Ensure proper spacing on small screens
+  section {
+    scroll-margin-top: 100px;
+  }
+}
+

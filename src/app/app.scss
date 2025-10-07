@@ -1,18 +1,22 @@
-// Prevent flash of content during route transition
-:host {
-  display: block;
+// App component styles
+
+// Remove any gap between header and content
+main {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }
 
-// Add a brief opacity transition to prevent flash
-router-outlet + * {
-  animation: fadeIn 0.2s ease-in;
+// Ensure sections start immediately after header
+section:first-child {
+  margin-top: 0 !important;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+// Force remove any border or gap from header
+app-header {
+  border-bottom: none !important;
+}
+
+// Ensure hero section connects perfectly with header
+.hero-section {
+  margin-top: -1px !important;
 }

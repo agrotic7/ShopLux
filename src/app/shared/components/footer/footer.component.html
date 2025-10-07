@@ -1,18 +1,18 @@
-<footer class="bg-gray-900 text-gray-300">
+<footer class="bg-gray-900 text-gray-300 mb-16 md:mb-0">
   <!-- Main Footer -->
-  <div class="container mx-auto px-4 py-12">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+  <div class="container mx-auto px-4 py-8 md:py-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
       <!-- About -->
       <div>
-        <div class="flex items-center space-x-2 mb-4">
-          <img src="/assets/logo.png" alt="ShopLux" class="w-10 h-10 rounded-lg object-contain">
-          <span class="text-2xl font-bold text-white">ShopLux</span>
+        <div class="flex items-center space-x-2 mb-3 md:mb-4">
+          <img src="/assets/logo.png" alt="ShopLux" class="w-8 h-8 md:w-10 md:h-10 rounded-lg object-contain">
+          <span class="text-xl md:text-2xl font-bold text-white">ShopLux</span>
         </div>
-        <p class="text-sm mb-4">
+        <p class="text-xs md:text-sm mb-3 md:mb-4">
           Votre destination premium pour les produits de qualité au Sénégal. 
           Livraison rapide dans tout le pays, service client exceptionnel.
         </p>
-        <div class="flex space-x-4">
+        <div class="flex space-x-3 md:space-x-4">
           <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary-600 transition">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -38,8 +38,8 @@
 
       <!-- Quick Links -->
       <div>
-        <h3 class="text-white font-semibold text-lg mb-4">Liens rapides</h3>
-        <ul class="space-y-2">
+        <h3 class="text-white font-semibold text-base md:text-lg mb-3 md:mb-4">Liens rapides</h3>
+        <ul class="space-y-1.5 md:space-y-2">
           <li><a routerLink="/products" class="hover:text-white transition">Catalogue</a></li>
           <li><a routerLink="/about" class="hover:text-white transition">À propos</a></li>
           <li><a routerLink="/contact" class="hover:text-white transition">Contact</a></li>
@@ -50,8 +50,8 @@
 
       <!-- Contact Info -->
       <div>
-        <h3 class="text-white font-semibold text-lg mb-4">Contact</h3>
-        <div class="space-y-3">
+        <h3 class="text-white font-semibold text-base md:text-lg mb-3 md:mb-4">Contact</h3>
+        <div class="space-y-2 md:space-y-3">
           <div class="flex items-center space-x-3">
             <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
@@ -76,11 +76,11 @@
 
       <!-- Newsletter -->
       <div>
-        <h3 class="text-white font-semibold text-lg mb-4">Newsletter</h3>
-        <p class="text-sm mb-4">
+        <h3 class="text-white font-semibold text-base md:text-lg mb-3 md:mb-4">Newsletter</h3>
+        <p class="text-xs md:text-sm mb-3 md:mb-4">
           Inscrivez-vous pour recevoir nos offres exclusives
         </p>
-        <form (ngSubmit)="subscribeNewsletter()" class="space-y-3">
+        <form (ngSubmit)="subscribeNewsletter()" class="space-y-2 md:space-y-3">
           <input
             type="email"
             [(ngModel)]="newsletterEmail"
@@ -96,14 +96,14 @@
             S'abonner
           </button>
         </form>
-        <div class="mt-4">
-          <p class="text-sm font-semibold mb-2">Moyens de paiement</p>
-          <div class="flex flex-wrap gap-2">
-            <div class="w-12 h-8 bg-gray-800 rounded flex items-center justify-center text-xs">VISA</div>
-            <div class="w-12 h-8 bg-gray-800 rounded flex items-center justify-center text-xs">MC</div>
-            <div class="w-12 h-8 bg-gray-800 rounded flex items-center justify-center text-xs">OM</div>
-            <div class="w-12 h-8 bg-gray-800 rounded flex items-center justify-center text-xs">WAVE</div>
-            <div class="w-12 h-8 bg-gray-800 rounded flex items-center justify-center text-xs">FCFA</div>
+        <div class="mt-3 md:mt-4">
+          <p class="text-xs md:text-sm font-semibold mb-2">Moyens de paiement</p>
+          <div class="flex flex-wrap gap-1.5 md:gap-2">
+            <div class="w-10 h-7 md:w-12 md:h-8 bg-gray-800 rounded flex items-center justify-center text-[10px] md:text-xs">VISA</div>
+            <div class="w-10 h-7 md:w-12 md:h-8 bg-gray-800 rounded flex items-center justify-center text-[10px] md:text-xs">MC</div>
+            <div class="w-10 h-7 md:w-12 md:h-8 bg-gray-800 rounded flex items-center justify-center text-[10px] md:text-xs">OM</div>
+            <div class="w-10 h-7 md:w-12 md:h-8 bg-gray-800 rounded flex items-center justify-center text-[10px] md:text-xs">WAVE</div>
+            <div class="w-10 h-7 md:w-12 md:h-8 bg-gray-800 rounded flex items-center justify-center text-[10px] md:text-xs">FCFA</div>
           </div>
         </div>
       </div>
@@ -112,10 +112,10 @@
 
   <!-- Bottom Bar -->
   <div class="border-t border-gray-800">
-    <div class="container mx-auto px-4 py-6">
-      <div class="flex flex-col md:flex-row justify-between items-center text-sm">
+    <div class="container mx-auto px-4 py-4 md:py-6">
+      <div class="flex flex-col md:flex-row justify-between items-center text-xs md:text-sm">
         <p>© {{ currentYear }} ShopLux. Tous droits réservés.</p>
-        <div class="flex space-x-6 mt-4 md:mt-0">
+        <div class="flex space-x-4 md:space-x-6 mt-3 md:mt-0">
           <a routerLink="/legal/privacy" class="hover:text-white transition">Politique de confidentialité</a>
           <a routerLink="/legal/terms" class="hover:text-white transition">Conditions d'utilisation</a>
         </div>

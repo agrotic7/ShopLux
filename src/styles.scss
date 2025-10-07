@@ -6,18 +6,6 @@
 /* Google Fonts - Plus stylé */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800&display=swap');
 
-/* 🚨 CSS D'URGENCE - PRIORITÉ ABSOLUE - FORCE TOUT À RENTRER */
-@import 'styles-emergency-mobile.scss';
-
-/* 🔧 FIX PRODUCT CARDS MOBILE - CRITIQUE */
-@import 'styles-product-cards-fix.scss';
-
-/* Mobile Responsive Styles */
-@import 'styles-mobile.scss';
-
-/* Overflow Fixes - IMPORTANT: doit être après mobile */
-@import 'styles-overflow-fix.scss';
-
 /* ============================================
    GLOBAL STYLES
    ============================================ */
@@ -314,6 +302,51 @@ body {
 /* Disable outline for mouse users */
 *:focus:not(:focus-visible) {
   outline: none;
+}
+
+/* ============================================
+   MOBILE OPTIMIZATIONS
+   ============================================ */
+
+/* Padding for bottom navigation on mobile */
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 64px; /* Height of bottom nav */
+  }
+}
+
+/* Safe area for mobile devices (iPhone notch, etc.) */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Improved touch targets for mobile */
+@media (max-width: 640px) {
+  button, a {
+    min-height: 44px; /* Apple's recommended minimum touch target */
+  }
+}
+
+/* Better text readability on small screens */
+@media (max-width: 375px) {
+  html {
+    font-size: 14px;
+  }
+  
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+/* Hide scrollbar but keep functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
 }
 
 /* ============================================

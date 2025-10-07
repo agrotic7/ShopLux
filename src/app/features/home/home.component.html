@@ -1,23 +1,23 @@
 <!-- ============================================
      HERO - Minimaliste & Puissant
      ============================================ -->
-<section class="relative min-h-screen flex items-center bg-white overflow-hidden">
+<section class="hero-section relative min-h-[80vh] md:min-h-screen flex items-center bg-white overflow-hidden">
   <!-- Subtle Grid Background -->
   <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(circle, #000 1px, transparent 1px); background-size: 40px 40px;"></div>
   
   <!-- Gradient Orb -->
-  <div class="absolute top-1/4 right-1/4 w-[800px] h-[800px] bg-gradient-to-br from-purple-200 via-pink-200 to-blue-200 rounded-full blur-3xl opacity-20 animate-pulse-slow"></div>
+  <div class="absolute top-1/4 right-1/4 w-[400px] md:w-[800px] h-[400px] md:h-[800px] bg-gradient-to-br from-purple-200 via-pink-200 to-blue-200 rounded-full blur-3xl opacity-20 animate-pulse-slow"></div>
 
-  <div class="container mx-auto px-4 py-20 relative z-10">
+  <div class="container mx-auto px-4 py-12 md:py-20 relative z-10">
     <div class="max-w-6xl mx-auto">
       <!-- Badge -->
-      <div class="inline-flex items-center space-x-2 px-4 py-2 bg-gray-100 rounded-full mb-8 animate-fadeIn">
+      <div class="inline-flex items-center space-x-2 px-3 md:px-4 py-1.5 md:py-2 bg-gray-100 rounded-full mb-6 md:mb-8 animate-fadeIn">
         <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-        <span class="text-sm font-medium text-gray-700">Nouvelle Collection Disponible</span>
+        <span class="text-xs md:text-sm font-medium text-gray-700">Nouvelle Collection Disponible</span>
       </div>
 
       <!-- Main Title -->
-      <h1 class="text-7xl md:text-8xl lg:text-9xl font-black text-gray-900 mb-8 leading-none tracking-tighter animate-fadeInUp">
+      <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black text-gray-900 mb-6 md:mb-8 leading-none tracking-tighter animate-fadeInUp">
         Shopping
         <br/>
         <span class="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
@@ -26,12 +26,12 @@
       </h1>
 
       <!-- Subtitle -->
-      <p class="text-2xl md:text-3xl text-gray-600 mb-12 max-w-3xl font-light leading-relaxed animate-fadeInUp" style="animation-delay: 0.1s;">
+      <p class="text-base sm:text-xl md:text-2xl lg:text-3xl text-gray-600 mb-8 md:mb-12 max-w-3xl font-light leading-relaxed animate-fadeInUp" style="animation-delay: 0.1s;">
         Découvrez une sélection exclusive de produits premium. Simple, élégant, accessible.
       </p>
 
       <!-- CTA -->
-      <div class="flex flex-wrap gap-4 mb-20 animate-fadeInUp" style="animation-delay: 0.2s;">
+      <div class="flex flex-wrap gap-3 md:gap-4 mb-12 md:mb-20 animate-fadeInUp" style="animation-delay: 0.2s;">
         <a routerLink="/products" class="group px-8 py-4 bg-gray-900 text-white rounded-2xl font-semibold hover:bg-gray-800 transition-all inline-flex items-center space-x-2 shadow-lg hover:shadow-xl">
           <span>Explorer</span>
           <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -65,34 +65,34 @@
 <!-- ============================================
      FEATURED PRODUCTS - Clean Grid
      ============================================ -->
-<section class="py-32 bg-gray-50">
+<section class="py-16 md:py-24 lg:py-32 bg-gray-50">
   <div class="container mx-auto px-4">
     <div class="max-w-7xl mx-auto">
       <!-- Header -->
-      <div class="mb-16">
-        <h2 class="text-6xl md:text-7xl font-black text-gray-900 mb-4 tracking-tight">
+      <div class="mb-8 md:mb-12 lg:mb-16">
+        <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 mb-3 md:mb-4 tracking-tight">
           Sélection
         </h2>
-        <p class="text-xl text-gray-600">Les produits que vous allez adorer</p>
+        <p class="text-base md:text-lg lg:text-xl text-gray-600">Les produits que vous allez adorer</p>
       </div>
 
       <!-- Products Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
         <div *ngFor="let product of featuredProducts; let i = index" 
              class="group animate-fadeInUp"
              [style.animation-delay]="(i * 0.05) + 's'">
           <a [routerLink]="['/products', product.slug]" class="block">
             <!-- Image -->
-            <div class="relative aspect-square bg-white rounded-3xl overflow-hidden mb-4 border border-gray-200 group-hover:border-gray-300 transition-all">
+            <div class="relative aspect-square bg-white rounded-2xl md:rounded-3xl overflow-hidden mb-2 md:mb-4 border border-gray-200 group-hover:border-gray-300 transition-all">
               <img [src]="getProductImage(product)" [alt]="product.name" 
                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
               
               <!-- Badges -->
-              <div class="absolute top-4 left-4 flex flex-col gap-2">
-                <span *ngIf="getDiscountPercentage(product) > 0" class="px-3 py-1 bg-black text-white text-xs font-bold rounded-full">
+              <div class="absolute top-2 md:top-4 left-2 md:left-4 flex flex-col gap-1 md:gap-2">
+                <span *ngIf="getDiscountPercentage(product) > 0" class="px-2 md:px-3 py-0.5 md:py-1 bg-black text-white text-[10px] md:text-xs font-bold rounded-full">
                   -{{ getDiscountPercentage(product) }}%
                 </span>
-                <span *ngIf="product.isNewArrival" class="px-3 py-1 bg-white text-black text-xs font-bold rounded-full">
+                <span *ngIf="product.isNewArrival" class="px-2 md:px-3 py-0.5 md:py-1 bg-white text-black text-[10px] md:text-xs font-bold rounded-full">
                   Nouveau
                 </span>
               </div>
@@ -199,14 +199,14 @@
 <!-- ============================================
      WHY US - Simple Icons
      ============================================ -->
-<section class="py-32 bg-gray-50">
+<section class="py-16 md:py-24 lg:py-32 bg-gray-50">
   <div class="container mx-auto px-4">
     <div class="max-w-7xl mx-auto">
-      <h2 class="text-6xl md:text-7xl font-black text-gray-900 mb-16 tracking-tight text-center">
+      <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-gray-900 mb-10 md:mb-16 tracking-tight text-center">
         Pourquoi ShopLux
       </h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12">
         <div *ngFor="let feature of [
           {icon: 'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4', title: 'Livraison Rapide', desc: 'Livraison à Dakar et dans tout le Sénégal'},
           {icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', title: 'Paiement Sécurisé', desc: 'Wave, Orange Money, Carte bancaire'},
@@ -215,13 +215,13 @@
         ]; let i = index" 
              class="text-center animate-fadeInUp"
              [style.animation-delay]="(i * 0.1) + 's'">
-          <div class="w-16 h-16 mx-auto mb-6 bg-gray-900 rounded-2xl flex items-center justify-center">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-6 bg-gray-900 rounded-xl md:rounded-2xl flex items-center justify-center">
+            <svg class="w-6 h-6 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="feature.icon"></path>
             </svg>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 mb-2">{{ feature.title }}</h3>
-          <p class="text-gray-600">{{ feature.desc }}</p>
+          <h3 class="text-sm md:text-lg lg:text-xl font-bold text-gray-900 mb-1 md:mb-2">{{ feature.title }}</h3>
+          <p class="text-xs md:text-sm lg:text-base text-gray-600">{{ feature.desc }}</p>
         </div>
       </div>
     </div>
@@ -231,7 +231,7 @@
 <!-- ============================================
      NEWSLETTER - Minimal
      ============================================ -->
-<section class="py-32 bg-white">
+<section class="py-16 md:py-24 lg:py-32 bg-white mb-16 md:mb-0">
   <div class="container mx-auto px-4">
     <div class="max-w-4xl mx-auto text-center">
       <h2 class="text-5xl md:text-6xl font-black text-gray-900 mb-6 tracking-tight">

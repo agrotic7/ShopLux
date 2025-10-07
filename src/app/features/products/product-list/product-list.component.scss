@@ -1,3 +1,5 @@
+// Product list styles
+
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -5,3 +7,11 @@
   overflow: hidden;
 }
 
+// Responsive improvements
+@media (max-width: 640px) {
+  // Make filters easier to access on mobile
+  aside {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+}
