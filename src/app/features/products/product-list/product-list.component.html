@@ -126,7 +126,9 @@
 
         <!-- Loading State -->
         <div *ngIf="isLoading" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
-          <div *ngFor="let i of [1,2,3,4,5,6]" class="bg-gray-200 rounded-lg h-72 md:h-96 animate-pulse"></div>
+          <div *ngFor="let i of [1,2,3,4,5,6]">
+            <app-loading-skeleton type="product-list"></app-loading-skeleton>
+          </div>
         </div>
 
         <!-- Products Grid -->
@@ -135,11 +137,12 @@
             <a [routerLink]="['/products', product.slug]" class="block">
               <div class="relative overflow-hidden rounded-lg md:rounded-xl bg-white shadow-md hover:shadow-xl transition">
                 <div class="aspect-square overflow-hidden">
-                  <img 
+                  <app-lazy-image 
                     [src]="getProductImage(product)" 
-                    [alt]="product.name" 
-                    class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-                  />
+                    [alt]="product.name"
+                    imageClass="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                    rootMargin="100px">
+                  </app-lazy-image>
                 </div>
                 
                 <div *ngIf="product.compareAtPrice" 
