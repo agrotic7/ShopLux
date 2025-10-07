@@ -29,6 +29,13 @@ export class ProductListComponent implements OnInit {
     sort: 'newest'
   };
 
+  // Pagination
+  totalProducts = 0;
+  currentPage = 1;
+  itemsPerPage = 12;
+  totalPages = 1;
+  Math = Math; // Expose Math to template
+
   // Filter UI state
   selectedCategory: string = '';
   priceRange = { min: 0, max: 1000 };
@@ -81,16 +88,36 @@ export class ProductListComponent implements OnInit {
   async loadProducts() {
     try {
       this.isLoading = true;
+      
+      // Get total count first
+      await this.loadTotalCount();
+      
+      // Load products for current page
+      this.filter.page = this.currentPage;
       this.products = await this.productService.getProducts(this.filter);
       
       // Extract unique brands
       this.availableBrands = [...new Set(this.products
         .map(p => p.brand)
         .filter(b => b) as string[])];
+        
+      // Scroll to top when changing pages
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Error loading products:', error);
     } finally {
       this.isLoading = false;
+    }
+  }
+
+  async loadTotalCount() {
+    try {
+      this.totalProducts = await this.productService.getProductCount(this.filter);
+      this.totalPages = Math.ceil(this.totalProducts / this.itemsPerPage);
+    } catch (error) {
+      console.error('Error loading total count:', error);
+      this.totalProducts = this.products.length;
+      this.totalPages = 1;
     }
   }
 
@@ -102,11 +129,13 @@ export class ProductListComponent implements OnInit {
       this.filter.categoryId = undefined;
     }
     
+    this.currentPage = 1;
     this.filter.page = 1;
     this.loadProducts();
   }
 
   onSortChange() {
+    this.currentPage = 1;
     this.filter.page = 1;
     this.loadProducts();
   }
@@ -114,6 +143,7 @@ export class ProductListComponent implements OnInit {
   onPriceRangeChange() {
     this.filter.minPrice = this.priceRange.min;
     this.filter.maxPrice = this.priceRange.max;
+    this.currentPage = 1;
     this.filter.page = 1;
     this.loadProducts();
   }
@@ -125,6 +155,7 @@ export class ProductListComponent implements OnInit {
       this.selectedBrands = this.selectedBrands.filter(b => b !== brand);
     }
     this.filter.brand = this.selectedBrands.length > 0 ? this.selectedBrands : undefined;
+    this.currentPage = 1;
     this.filter.page = 1;
     this.loadProducts();
   }
@@ -133,6 +164,7 @@ export class ProductListComponent implements OnInit {
     this.selectedCategory = '';
     this.priceRange = { min: 0, max: 1000 };
     this.selectedBrands = [];
+    this.currentPage = 1;
     this.filter = {
       page: 1,
       limit: 12,
@@ -168,9 +200,58 @@ export class ProductListComponent implements OnInit {
     return Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100);
   }
 
-  loadMore() {
-    this.filter.page = (this.filter.page || 1) + 1;
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
     this.loadProducts();
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.goToPage(this.currentPage + 1);
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.goToPage(this.currentPage - 1);
+    }
+  }
+
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxPagesToShow = 5;
+    
+    if (this.totalPages <= maxPagesToShow) {
+      // Show all pages if total is small
+      for (let i = 1; i <= this.totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Show smart pagination
+      const leftBound = Math.max(1, this.currentPage - 2);
+      const rightBound = Math.min(this.totalPages, this.currentPage + 2);
+      
+      if (leftBound > 1) {
+        pages.push(1);
+        if (leftBound > 2) {
+          pages.push(-1); // Ellipsis
+        }
+      }
+      
+      for (let i = leftBound; i <= rightBound; i++) {
+        pages.push(i);
+      }
+      
+      if (rightBound < this.totalPages) {
+        if (rightBound < this.totalPages - 1) {
+          pages.push(-1); // Ellipsis
+        }
+        pages.push(this.totalPages);
+      }
+    }
+    
+    return pages;
   }
 
   onProductClick(product: Product) {

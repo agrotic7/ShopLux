@@ -24,6 +24,10 @@ export class AdminProductsComponent implements OnInit {
   searchQuery = '';
   selectedCategory = '';
   selectedStatus = '';
+  
+  // Sélection multiple
+  selectedProducts: Set<string> = new Set();
+  selectAll = false;
 
   currentProduct: any = this.getEmptyProduct();
   imageUrlsText = '';
@@ -119,7 +123,10 @@ export class AdminProductsComponent implements OnInit {
     this.editMode = true;
     
     // Convert arrays to text for editing
-    this.imageUrlsText = Array.isArray(product.images) ? product.images.join('\n') : '';
+    // Extract URLs from image objects
+    this.imageUrlsText = Array.isArray(product.images) 
+      ? product.images.map((img: any) => typeof img === 'string' ? img : img.url).filter(Boolean).join('\n')
+      : '';
     this.tagsText = Array.isArray(product.tags) ? product.tags.join(', ') : '';
     this.specificationsText = product.specifications ? JSON.stringify(product.specifications, null, 2) : '{}';
     
@@ -169,12 +176,20 @@ export class AdminProductsComponent implements OnInit {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '');
 
-      // Convert image URLs text to array
+      // Convert image URLs text to array of objects
       if (this.imageUrlsText.trim()) {
-        this.currentProduct.images = this.imageUrlsText
+        const urls = this.imageUrlsText
           .split('\n')
           .map(url => url.trim())
           .filter(url => url.length > 0);
+        
+        this.currentProduct.images = urls.map((url, index) => ({
+          id: String(index + 1),
+          url: url,
+          alt: this.currentProduct.name || 'Product image',
+          isPrimary: index === 0,
+          order: index + 1
+        }));
       } else {
         this.currentProduct.images = [];
       }
@@ -245,7 +260,68 @@ export class AdminProductsComponent implements OnInit {
       await this.loadProducts();
     } catch (error: any) {
       console.error('Error deleting product:', error);
-      this.toastService.info('Erreur lors de la suppression: ' + error.message);
+      this.toastService.error('Erreur lors de la suppression: ' + error.message);
+    }
+  }
+
+  // Sélection multiple
+  toggleProductSelection(productId: string) {
+    if (this.selectedProducts.has(productId)) {
+      this.selectedProducts.delete(productId);
+    } else {
+      this.selectedProducts.add(productId);
+    }
+    this.updateSelectAllState();
+  }
+
+  toggleSelectAll() {
+    if (this.selectAll) {
+      // Sélectionner tous les produits filtrés
+      this.filteredProducts.forEach(p => this.selectedProducts.add(p.id));
+    } else {
+      // Désélectionner tous
+      this.selectedProducts.clear();
+    }
+  }
+
+  updateSelectAllState() {
+    const visibleIds = this.filteredProducts.map(p => p.id);
+    this.selectAll = visibleIds.length > 0 && visibleIds.every(id => this.selectedProducts.has(id));
+  }
+
+  isProductSelected(productId: string): boolean {
+    return this.selectedProducts.has(productId);
+  }
+
+  async deleteSelectedProducts() {
+    const count = this.selectedProducts.size;
+    
+    if (count === 0) {
+      this.toastService.warning('Veuillez sélectionner au moins un produit');
+      return;
+    }
+
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${count} produit(s) ?`)) {
+      return;
+    }
+
+    try {
+      const idsToDelete = Array.from(this.selectedProducts);
+      
+      const { error } = await this.supabase.client
+        .from('products')
+        .delete()
+        .in('id', idsToDelete);
+
+      if (error) throw error;
+
+      this.toastService.success(`${count} produit(s) supprimé(s) avec succès!`);
+      this.selectedProducts.clear();
+      this.selectAll = false;
+      await this.loadProducts();
+    } catch (error: any) {
+      console.error('Error deleting products:', error);
+      this.toastService.error('Erreur lors de la suppression: ' + error.message);
     }
   }
 
@@ -307,5 +383,77 @@ export class AdminProductsComponent implements OnInit {
     }
     
     return firstImage?.url || '/assets/logo.png';
+  }
+
+  // Export fonctionality
+  exportToCSV() {
+    const headers = ['ID', 'Nom', 'SKU', 'Catégorie', 'Prix', 'Prix comparaison', 'Stock', 'Marque', 'Statut', 'Créé le'];
+    const data = this.filteredProducts.map(p => [
+      p.id,
+      p.name,
+      p.sku,
+      p.category?.name || 'N/A',
+      p.price,
+      p.compareAtPrice || '',
+      p.stock,
+      p.brand || '',
+      p.status,
+      p.createdAt?.toLocaleDateString() || ''
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...data.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `produits_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    this.toastService.success('Export CSV terminé!');
+  }
+
+  exportSelectedToCSV() {
+    if (this.selectedProducts.size === 0) {
+      this.toastService.warning('Veuillez sélectionner au moins un produit');
+      return;
+    }
+
+    const headers = ['ID', 'Nom', 'SKU', 'Catégorie', 'Prix', 'Prix comparaison', 'Stock', 'Marque', 'Statut'];
+    const selectedProductsList = this.filteredProducts.filter(p => this.selectedProducts.has(p.id));
+    const data = selectedProductsList.map(p => [
+      p.id,
+      p.name,
+      p.sku,
+      p.category?.name || 'N/A',
+      p.price,
+      p.compareAtPrice || '',
+      p.stock,
+      p.brand || '',
+      p.status
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...data.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `produits_selection_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    this.toastService.success(`Export de ${this.selectedProducts.size} produit(s) terminé!`);
   }
 }

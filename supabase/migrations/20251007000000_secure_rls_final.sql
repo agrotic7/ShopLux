@@ -232,24 +232,24 @@ WITH CHECK (
 -- 6. SÉCURISER LES AUTRES TABLES
 -- ============================================
 
--- Wishlist
-ALTER TABLE wishlist ENABLE ROW LEVEL SECURITY;
+-- Wishlist (wishlists au pluriel)
+ALTER TABLE wishlists ENABLE ROW LEVEL SECURITY;
 
-DROP POLICY IF EXISTS "users_manage_own_wishlist" ON wishlist;
+DROP POLICY IF EXISTS "users_manage_own_wishlist" ON wishlists;
 
 CREATE POLICY "users_manage_own_wishlist"
-ON wishlist FOR ALL
+ON wishlists FOR ALL
 TO authenticated
 USING (user_id = auth.uid())
 WITH CHECK (user_id = auth.uid());
 
--- Cart
-ALTER TABLE cart ENABLE ROW LEVEL SECURITY;
+-- Cart (carts au pluriel)
+ALTER TABLE carts ENABLE ROW LEVEL SECURITY;
 
-DROP POLICY IF EXISTS "users_manage_own_cart" ON cart;
+DROP POLICY IF EXISTS "users_manage_own_cart" ON carts;
 
 CREATE POLICY "users_manage_own_cart"
-ON cart FOR ALL
+ON carts FOR ALL
 TO authenticated
 USING (user_id = auth.uid())
 WITH CHECK (user_id = auth.uid());

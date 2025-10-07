@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SupabaseService } from '../../../core/services/supabase.service';
 import { CurrencyService } from '../../../core/services/currency.service';
+import { ChartComponent } from '../../../shared/components/chart/chart.component';
+import { ChartConfiguration } from 'chart.js';
 
 interface Stats {
   totalOrders: number;
@@ -29,7 +31,7 @@ interface Stats {
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ChartComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
@@ -57,6 +59,11 @@ export class AdminDashboardComponent implements OnInit {
   };
   
   isLoading = true;
+  
+  // Chart configurations
+  revenueChartConfig?: ChartConfiguration;
+  ordersChartConfig?: ChartConfiguration;
+  categoryChartConfig?: ChartConfiguration;
 
   constructor(
     private supabase: SupabaseService,
@@ -100,6 +107,9 @@ export class AdminDashboardComponent implements OnInit {
 
         // Top customers
         this.stats.topCustomers = this.calculateTopCustomers(orders);
+        
+        // Initialize charts
+        this.initializeCharts(orders);
       }
 
       // Get customers
@@ -113,10 +123,16 @@ export class AdminDashboardComponent implements OnInit {
       // Get products with stock info
       const { data: products, count: productCount } = await this.supabase.client
         .from('products')
-        .select('*', { count: 'exact' });
+        .select('*, category:categories(name)')
+        .eq('status', 'active');
 
       this.stats.totalProducts = productCount || 0;
       this.stats.lowStockProducts = products?.filter(p => p.stock < 10) || [];
+      
+      // Category chart
+      if (products) {
+        this.initializeCategoryChart(products);
+      }
 
       // Get top products
       await this.loadTopProducts();
@@ -248,5 +264,150 @@ export class AdminDashboardComponent implements OnInit {
       'cancelled': 'Annulée'
     };
     return labels[status] || status;
+  }
+
+  private initializeCharts(orders: any[]) {
+    // Revenue chart (last 7 days)
+    const last7Days = this.getLast7Days();
+    const revenueData = last7Days.map(date => {
+      return orders
+        .filter(o => this.isSameDay(new Date(o.created_at), date))
+        .reduce((sum, order) => sum + order.total, 0);
+    });
+
+    this.revenueChartConfig = {
+      type: 'line',
+      data: {
+        labels: last7Days.map(d => d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric' })),
+        datasets: [{
+          label: 'Revenus (FCFA)',
+          data: revenueData,
+          borderColor: 'rgb(99, 102, 241)',
+          backgroundColor: 'rgba(99, 102, 241, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            callbacks: {
+              label: (context) => this.currencyService.formatPrice(context.parsed.y)
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: (value) => this.currencyService.formatPrice(value as number)
+            }
+          }
+        }
+      }
+    };
+
+    // Orders chart (last 7 days)
+    const ordersData = last7Days.map(date => {
+      return orders.filter(o => this.isSameDay(new Date(o.created_at), date)).length;
+    });
+
+    this.ordersChartConfig = {
+      type: 'bar',
+      data: {
+        labels: last7Days.map(d => d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric' })),
+        datasets: [{
+          label: 'Commandes',
+          data: ordersData,
+          backgroundColor: 'rgba(59, 130, 246, 0.8)',
+          borderColor: 'rgb(59, 130, 246)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1
+            }
+          }
+        }
+      }
+    };
+  }
+
+  private initializeCategoryChart(products: any[]) {
+    // Group products by category
+    const categoryStats = products.reduce((acc: any, product) => {
+      const categoryName = product.category?.name || 'Sans catégorie';
+      if (!acc[categoryName]) {
+        acc[categoryName] = 0;
+      }
+      acc[categoryName] += 1;
+      return acc;
+    }, {});
+
+    const labels = Object.keys(categoryStats);
+    const data = Object.values(categoryStats) as number[];
+    const colors = [
+      'rgba(99, 102, 241, 0.8)',
+      'rgba(236, 72, 153, 0.8)',
+      'rgba(34, 197, 94, 0.8)',
+      'rgba(249, 115, 22, 0.8)',
+      'rgba(139, 92, 246, 0.8)',
+      'rgba(6, 182, 212, 0.8)'
+    ];
+
+    this.categoryChartConfig = {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: colors.slice(0, labels.length),
+          borderColor: colors.slice(0, labels.length).map(c => c.replace('0.8', '1')),
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    };
+  }
+
+  private getLast7Days(): Date[] {
+    const days: Date[] = [];
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      date.setHours(0, 0, 0, 0);
+      days.push(date);
+    }
+    return days;
+  }
+
+  private isSameDay(date1: Date, date2: Date): boolean {
+    return date1.getFullYear() === date2.getFullYear() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getDate() === date2.getDate();
   }
 }

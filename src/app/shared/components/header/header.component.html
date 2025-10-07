@@ -30,14 +30,14 @@
   </div>
 
   <!-- Main Header -->
-  <div class="container mx-auto px-3 md:px-4 py-3 md:py-4">
+  <div class="container mx-auto px-3 md:px-4 py-3 md:py-4 header-mobile">
     <div class="flex items-center justify-between gap-2 md:gap-8">
       <!-- Logo -->
       <a routerLink="/" class="flex items-center space-x-2 md:space-x-3 group">
-        <img src="/assets/logo.png" alt="ShopLux" class="w-10 h-10 md:w-12 md:h-12 rounded-xl object-contain shadow-glow group-hover:shadow-glow-lg transition-all">
+        <img src="/assets/logo.png" alt="ShopLux" class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl object-contain shadow-glow group-hover:shadow-glow-lg transition-all">
         <div class="block">
-          <div class="text-lg md:text-2xl font-display font-bold gradient-text">ShopLux</div>
-          <div class="text-[10px] md:text-xs text-gray-500 -mt-1 hidden sm:block">Luxury Shopping</div>
+          <div class="text-base sm:text-lg md:text-2xl font-display font-bold gradient-text logo-text">ShopLux</div>
+          <div class="text-[10px] md:text-xs text-gray-500 -mt-1 hidden sm:block logo-subtitle">Luxury Shopping</div>
         </div>
       </a>
 
@@ -64,10 +64,10 @@
       </div>
 
       <!-- Actions -->
-      <div class="flex items-center space-x-1 md:space-x-4">
+      <div class="flex items-center space-x-1 md:space-x-4 header-actions">
         <!-- Search Mobile -->
-        <button (click)="toggleSearchBar()" class="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors">
-          <svg class="w-5 h-5 md:w-6 md:h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button (click)="toggleSearchBar()" class="md:hidden p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors touch-friendly">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
           </svg>
         </button>

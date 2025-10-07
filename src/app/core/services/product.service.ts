@@ -17,6 +17,44 @@ export class ProductService {
     this.loadCategories().catch(err => console.error('Error loading categories:', err));
   }
 
+  async getProductCount(filter?: ProductFilter): Promise<number> {
+    let query = this.supabase.client
+      .from('products')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'active');
+
+    // Apply same filters as getProducts
+    if (filter?.categoryId) {
+      query = query.eq('category_id', filter.categoryId);
+    }
+
+    if (filter?.minPrice) {
+      query = query.gte('price', filter.minPrice);
+    }
+
+    if (filter?.maxPrice) {
+      query = query.lte('price', filter.maxPrice);
+    }
+
+    if (filter?.brand && filter.brand.length > 0) {
+      query = query.in('brand', filter.brand);
+    }
+
+    if (filter?.inStock) {
+      query = query.gt('stock', 0);
+    }
+
+    if (filter?.search) {
+      query = query.or(`name.ilike.%${filter.search}%,description.ilike.%${filter.search}%`);
+    }
+
+    const { count, error } = await query;
+
+    if (error) throw error;
+
+    return count || 0;
+  }
+
   async getProducts(filter?: ProductFilter): Promise<Product[]> {
     let query = this.supabase.client
       .from('products')

@@ -38,6 +38,8 @@ import { CommonModule } from '@angular/common';
       position: relative;
       overflow: hidden;
       background-color: #f3f4f6;
+      width: 100%;
+      height: 100%;
     }
     
     .lazy-placeholder {

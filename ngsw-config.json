@@ -34,7 +34,8 @@
       "urls": [
         "/api/products/**",
         "/api/categories/**",
-        "/api/featured/**"
+        "/api/featured/**",
+        "https://tepiaptcwcrahugnfmcq.supabase.co/**"
       ],
       "cacheConfig": {
         "strategy": "freshness",
@@ -53,6 +54,29 @@
         "strategy": "performance",
         "maxSize": 50,
         "maxAge": "1d"
+      }
+    },
+    {
+      "name": "external-images",
+      "urls": [
+        "https://images.unsplash.com/**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 200,
+        "maxAge": "7d"
+      }
+    },
+    {
+      "name": "external-fonts",
+      "urls": [
+        "https://fonts.googleapis.com/**",
+        "https://fonts.gstatic.com/**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 20,
+        "maxAge": "30d"
       }
     }
   ]

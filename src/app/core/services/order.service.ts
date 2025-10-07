@@ -36,6 +36,14 @@ export class OrderService {
         return { success: false, error: 'Cart is empty' };
       }
 
+      // Vérifier le rate limit (max 5 commandes par minute)
+      const { data: rateLimitOk, error: rateLimitError } = await this.supabase.client
+        .rpc('check_order_rate_limit', { p_user_id: user.id });
+
+      if (rateLimitError || !rateLimitOk) {
+        return { success: false, error: 'Trop de tentatives. Veuillez patienter.' };
+      }
+
       const orderNumber = this.generateOrderNumber();
 
       const orderData = {
@@ -62,38 +70,33 @@ export class OrderService {
         notes: notes
       };
 
-      const { data, error } = await this.supabase.client
-        .from('orders')
-        .insert([orderData])
-        .select()
-        .single();
+      // Utiliser la fonction SQL sécurisée avec vérification atomique du stock
+      const { data: result, error } = await this.supabase.client
+        .rpc('create_order_with_stock_check', { p_order_data: orderData });
 
       if (error) {
         return { success: false, error: error.message };
       }
 
-      // Create order_items entries for analytics
-      const orderItemsData = cart.items.map(item => ({
-        order_id: data.id,
-        product_id: item.productId,
-        quantity: item.quantity,
-        price: item.price,
-        total: item.price * item.quantity
-      }));
-
-      const { error: orderItemsError } = await this.supabase.client
-        .from('order_items')
-        .insert(orderItemsData);
-
-      if (orderItemsError) {
-        console.error('Error creating order items:', orderItemsError);
-        // Continue anyway as the order was created successfully
+      // Vérifier le résultat
+      if (!result || !result.success) {
+        const errorMsg = result?.error || 'Erreur lors de la création';
+        
+        // Message spécifique pour stock insuffisant
+        if (errorMsg.includes('Stock insuffisant')) {
+          return { 
+            success: false, 
+            error: 'Un ou plusieurs produits ne sont plus disponibles en quantité suffisante.' 
+          };
+        }
+        
+        return { success: false, error: errorMsg };
       }
 
-      // Clear the cart after successful order
+      // Clear cart after successful order
       await this.cartService.clearCart();
 
-      return { success: true, orderId: data.id };
+      return { success: true, orderId: result.order_id };
     } catch (error: any) {
       return { success: false, error: error.message };
     }

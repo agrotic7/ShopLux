@@ -10,6 +10,31 @@
   <meta name="author" content="ShopLux">
   <meta name="robots" content="index, follow">
   
+  <!-- Content Security Policy -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://www.googletagmanager.com https://tepiaptcwcrahugnfmcq.supabase.co;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    font-src 'self' https://fonts.gstatic.com data:;
+    img-src 'self' data: https: blob:;
+    connect-src 'self' https://tepiaptcwcrahugnfmcq.supabase.co wss://tepiaptcwcrahugnfmcq.supabase.co https://accounts.google.com https://fonts.googleapis.com https://fonts.gstatic.com https://images.unsplash.com https://www.googletagmanager.com https://lh3.googleusercontent.com;
+    frame-src 'self' https://accounts.google.com;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+  ">
+  
+  <!-- Désactiver temporairement le service worker pour forcer la nouvelle CSP -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+  </script>
+  
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://shoplux.sn/">
