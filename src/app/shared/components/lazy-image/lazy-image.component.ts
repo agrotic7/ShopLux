@@ -108,8 +108,11 @@ export class LazyImageComponent implements OnInit, OnDestroy {
   hasError = false;
   private observer?: IntersectionObserver;
 
+  constructor(private elementRef: ElementRef) {}
+
   ngOnInit() {
-    this.createIntersectionObserver();
+    // Charger l'image immédiatement pour le moment
+    this.loadImage();
   }
 
   ngOnDestroy() {
@@ -119,7 +122,7 @@ export class LazyImageComponent implements OnInit, OnDestroy {
   }
 
   private createIntersectionObserver() {
-    if ('IntersectionObserver' in window) {
+    if ('IntersectionObserver' in window && this.elementRef.nativeElement) {
       this.observer = new IntersectionObserver(
         (entries) => {
           entries.forEach(entry => {
@@ -133,6 +136,8 @@ export class LazyImageComponent implements OnInit, OnDestroy {
           rootMargin: this.rootMargin
         }
       );
+      
+      this.observer.observe(this.elementRef.nativeElement);
     } else {
       // Fallback for browsers without IntersectionObserver
       this.loadImage();
@@ -140,6 +145,11 @@ export class LazyImageComponent implements OnInit, OnDestroy {
   }
 
   private loadImage() {
+    if (!this.src) {
+      this.hasError = true;
+      return;
+    }
+
     const img = new Image();
     img.onload = () => {
       this.isLoaded = true;
