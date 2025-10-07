@@ -216,7 +216,7 @@
       </div>
 
       <!-- Products Grid -->
-      <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+      <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <!-- Loading Skeleton -->
         <ng-container *ngIf="isLoading">
           <div *ngFor="let i of [1,2,3,4,5,6,7,8]" class="animate-pulse">
@@ -233,9 +233,9 @@
                (click)="onProductClick(product)"
                class="block">
               <!-- Modern Product Card -->
-              <div class="relative overflow-hidden rounded-xl md:rounded-2xl bg-white shadow-md hover:shadow-xl transition-all duration-500 group-hover:-translate-y-2">
+              <div class="relative overflow-hidden rounded-2xl md:rounded-3xl bg-white shadow-lg hover:shadow-2xl transition-all duration-500 group-hover:-translate-y-2">
                 <!-- Image Container -->
-                <div class="relative aspect-square overflow-hidden bg-gray-50">
+                <div class="relative aspect-square overflow-hidden bg-gray-100">
                   <app-lazy-image 
                     [src]="getProductImage(product)" 
                     [alt]="product.name"
@@ -281,7 +281,7 @@
             </div>
 
                 <!-- Product Info -->
-                <div class="p-3 md:p-5 space-y-2.5">
+                <div class="p-3 md:p-4 space-y-2">
               <!-- Brand & Rating -->
                   <div class="flex items-center justify-between text-xs">
                     <span *ngIf="product.brand" class="text-purple-600 font-bold uppercase tracking-wider">{{ product.brand }}</span>
@@ -294,21 +294,21 @@
               </div>
 
                   <!-- Product Name -->
-                  <h3 class="font-bold text-base md:text-lg text-gray-900 line-clamp-2 group-hover:text-purple-600 transition-colors">
+                  <h3 class="font-bold text-sm md:text-base text-gray-900 line-clamp-2 group-hover:text-purple-600 transition-colors leading-tight">
                 {{ product.name }}
               </h3>
 
                   <!-- Price & Add to Cart -->
-                  <div class="flex items-center justify-between pt-2">
+                  <div class="flex items-center justify-between pt-1">
                     <div class="flex flex-col">
-                      <span class="text-xl md:text-2xl font-black text-gray-900">{{ product.price }} FCFA</span>
+                      <span class="text-lg md:text-xl font-black text-gray-900">{{ product.price }} FCFA</span>
                       <span *ngIf="product.compareAtPrice" class="text-xs text-gray-400 line-through">
                         {{ product.compareAtPrice }} FCFA
                       </span>
                     </div>
                     
-                    <button class="group/btn w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 hover:scale-110">
-                      <svg class="w-6 h-6 text-white group-hover/btn:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button class="group/btn w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 hover:scale-110">
+                      <svg class="w-5 h-5 md:w-6 md:h-6 text-white group-hover/btn:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
                       </svg>
                     </button>
@@ -356,7 +356,7 @@
       </div>
 
       <!-- Categories Grid -->
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
         <a *ngFor="let category of categories.slice(0, 6); let i = index" 
            [routerLink]="category.link"
            class="group relative aspect-[4/5] overflow-hidden rounded-2xl md:rounded-3xl animate-fadeInUp"
