@@ -153,5 +153,13 @@ export class HomeComponent implements OnInit {
   onLearnMoreClick() {
     this.analyticsService.trackLinkClick('En savoir plus', '#about', 'cta');
   }
+
+  scrollToProducts() {
+    const element = document.getElementById('products');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      this.analyticsService.trackLinkClick('Scroll to products', '#products', 'cta');
+    }
+  }
 }
 
