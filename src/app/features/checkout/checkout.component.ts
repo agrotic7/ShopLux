@@ -70,10 +70,6 @@ export class CheckoutComponent implements OnInit {
   };
 
   paymentForm = {
-    cardNumber: '',
-    expiryDate: '',
-    cvv: '',
-    cardName: '',
     mobileNumber: '' // Pour Wave et Orange Money
   };
 
@@ -348,14 +344,6 @@ export class CheckoutComponent implements OnInit {
     }
     
     // Validate payment method specific fields
-    if (this.selectedPaymentMethod.id === 'card') {
-      if (!this.paymentForm.cardNumber || !this.paymentForm.expiryDate || 
-          !this.paymentForm.cvv || !this.paymentForm.cardName) {
-        this.toastService.warning('Veuillez remplir toutes les informations de carte bancaire');
-        return;
-      }
-    }
-
     if (this.selectedPaymentMethod.id === 'wave' || this.selectedPaymentMethod.id === 'orange_money') {
       if (!this.paymentForm.mobileNumber) {
         this.toastService.warning('Veuillez entrer votre numéro de téléphone mobile');
@@ -408,10 +396,60 @@ export class CheckoutComponent implements OnInit {
       
       if (result.success && result.orderId) {
         // Traiter le paiement selon la méthode choisie
-        const paymentSuccess = await this.processPayment(result.orderId, this.getFinalTotal());
+        const paymentResult = await this.processPayment(result.orderId, this.getFinalTotal());
 
-        if (paymentSuccess) {
-          // Envoyer email de confirmation
+        // Pour Wave et Orange Money, le paiement est en attente
+        if (paymentResult.requiresExternalAction) {
+          const user = this.authService.currentUser;
+          if (user) {
+            // Notification pour paiement en attente
+            await this.notificationService.createNotification(
+              user.id,
+              'Commande en attente de paiement ⏳',
+              `Veuillez compléter le paiement de ${this.getFinalTotal().toFixed(0)} FCFA pour finaliser votre commande.`,
+              'order',
+              `/account/orders/${result.orderId}`
+            );
+          }
+
+          // Save addresses if requested
+          if (this.saveShippingAddress) {
+            await this.authService.saveAddress({
+              type: 'shipping',
+              firstName: this.checkoutForm.shippingAddress.firstName,
+              lastName: this.checkoutForm.shippingAddress.lastName,
+              street: this.checkoutForm.shippingAddress.street,
+              city: this.checkoutForm.shippingAddress.city,
+              state: this.checkoutForm.shippingAddress.state,
+              zipCode: this.checkoutForm.shippingAddress.zipCode,
+              country: this.checkoutForm.shippingAddress.country,
+              phone: this.checkoutForm.shippingAddress.phone,
+              isDefault: true
+            });
+          }
+
+          if (this.saveBillingAddress && !this.sameAsShipping) {
+            await this.authService.saveAddress({
+              type: 'billing',
+              firstName: this.checkoutForm.billingAddress.firstName,
+              lastName: this.checkoutForm.billingAddress.lastName,
+              street: this.checkoutForm.billingAddress.street,
+              city: this.checkoutForm.billingAddress.city,
+              state: this.checkoutForm.billingAddress.state,
+              zipCode: this.checkoutForm.billingAddress.zipCode,
+              country: this.checkoutForm.billingAddress.country,
+              phone: this.checkoutForm.billingAddress.phone,
+              isDefault: true
+            });
+          }
+
+          // NE PAS vider le panier - l'utilisateur n'a pas encore payé
+          this.toastService.info('Commande créée ! Veuillez compléter le paiement via le lien qui s\'est ouvert.', 5000);
+          
+          // Rediriger vers la page de la commande (pas de confirmation)
+          this.router.navigate(['/account/orders', result.orderId]);
+        } else if (paymentResult.success) {
+          // Paiement immédiat réussi (Cash on Delivery)
           const user = this.authService.currentUser;
           if (user) {
             const orderNumber = result.orderId.substring(0, 8).toUpperCase();
@@ -463,12 +501,12 @@ export class CheckoutComponent implements OnInit {
             });
           }
 
-          // Vider le panier
+          // Vider le panier seulement si paiement confirmé
           await this.cartService.clearCart();
 
           // Redirect to success page
           this.paymentSuccess = true;
-          this.toastService.success('Commande validée avec succès ! Paiement confirmé. Vous allez être redirigé...', 3000);
+          this.toastService.success('Commande validée avec succès ! Vous allez être redirigé...', 3000);
           this.router.navigate(['/account/orders', result.orderId]);
         } else {
           // Paiement échoué
@@ -491,41 +529,32 @@ export class CheckoutComponent implements OnInit {
   /**
    * Traiter le paiement selon la méthode choisie
    */
-  private async processPayment(orderId: string, amount: number): Promise<boolean> {
+  private async processPayment(orderId: string, amount: number): Promise<{ success: boolean; requiresExternalAction: boolean }> {
     try {
       const method = this.selectedPaymentMethod;
-      if (!method) return false;
+      if (!method) return { success: false, requiresExternalAction: false };
 
       switch (method.id) {
-        case 'card':
-          // Paiement par carte (simulation en dev, Stripe en prod)
-          const cardResult = await this.paymentService.simulateCardPayment(
-            orderId,
-            amount,
-            this.paymentForm.cardNumber,
-            this.paymentForm.expiryDate,
-            this.paymentForm.cvv
-          );
-          return cardResult.success;
-
         case 'wave':
-          // Paiement Wave Money
-          return await this.paymentService.processWavePayment(
+          // Paiement Wave Money - nécessite une action externe
+          const waveSuccess = await this.paymentService.processWavePayment(
             amount,
             this.paymentForm.mobileNumber,
             orderId
           );
+          return { success: waveSuccess, requiresExternalAction: true };
 
         case 'orange_money':
-          // Paiement Orange Money
-          return await this.paymentService.processOrangeMoneyPayment(
+          // Paiement Orange Money - nécessite une action externe
+          const omSuccess = await this.paymentService.processOrangeMoneyPayment(
             amount,
             this.paymentForm.mobileNumber,
             orderId
           );
+          return { success: omSuccess, requiresExternalAction: true };
 
         case 'cash_on_delivery':
-          // Paiement à la livraison - paiement en attente
+          // Paiement à la livraison - validation immédiate
           await this.paymentService.createPaymentTransaction(
             orderId,
             `cod_${Date.now()}`,
@@ -534,27 +563,15 @@ export class CheckoutComponent implements OnInit {
             'XOF',
             'pending'
           );
-          return true; // Commande validée, paiement à la livraison
-
-        case 'bank_transfer':
-          // Virement bancaire - validation manuelle
-          await this.paymentService.createPaymentTransaction(
-            orderId,
-            `bank_transfer_${Date.now()}`,
-            'stripe', // Provider générique
-            amount,
-            'XOF',
-            'pending'
-          );
-          return true; // Toujours validé, sera confirmé manuellement
+          return { success: true, requiresExternalAction: false };
 
         default:
           console.error('Unknown payment method:', method.id);
-          return false;
+          return { success: false, requiresExternalAction: false };
       }
     } catch (error) {
       console.error('Payment processing error:', error);
-      return false;
+      return { success: false, requiresExternalAction: false };
     }
   }
 }

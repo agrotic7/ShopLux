@@ -406,173 +406,57 @@
             </div>
           </div>
 
-          <!-- Cash on Delivery Info -->
-          <div *ngIf="selectedPaymentMethod?.id === 'cash_on_delivery'" class="mt-6 space-y-4 p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border-2 border-green-200">
-            <div class="flex items-center space-x-3 mb-4">
-              <div class="h-12 w-12 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-2xl">💵</div>
-              <div>
-                <h4 class="font-bold text-gray-900 text-lg">Paiement à la livraison</h4>
-                <p class="text-xs text-gray-600">Payez en espèces quand vous recevez votre commande</p>
-              </div>
-            </div>
-
-            <div class="space-y-4">
-              <div class="p-4 bg-white rounded-xl border border-green-200">
-                <p class="text-sm text-gray-800 font-medium mb-2">✅ Comment ça marche ?</p>
-                <ol class="text-sm text-gray-600 space-y-2 ml-4 list-decimal">
-                  <li>Validez votre commande maintenant</li>
-                  <li>Nous préparons et expédions vos articles</li>
-                  <li>Vous payez en espèces au livreur à la réception</li>
-                  <li>Vous recevez votre commande immédiatement</li>
-                </ol>
-              </div>
-
-              <div class="p-4 bg-yellow-50 rounded-xl border border-yellow-200">
-                <p class="text-sm font-medium text-yellow-900 mb-2">⚠️ Important</p>
-                <ul class="text-xs text-yellow-800 space-y-1 ml-4 list-disc">
-                  <li>Ayez le <strong>montant exact</strong> si possible : <span class="font-bold">{{ getFinalTotal() | number:'1.0-0' }} FCFA</span></li>
-                  <li>Vérifiez votre colis avant de payer</li>
-                  <li>Demandez un reçu au livreur</li>
-                  <li>En cas d'absence, le livreur vous recontactera</li>
-                </ul>
-              </div>
-
-              <div class="p-4 bg-green-100 rounded-xl border border-green-300">
-                <p class="text-sm text-green-900">
-                  <strong>💚 Avantages :</strong> Pas besoin de carte bancaire • Paiement sécurisé • Vous payez uniquement si vous êtes satisfait
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card Payment Form (if card selected) -->
-          <div *ngIf="selectedPaymentMethod?.id === 'card'" class="mt-6 space-y-4 p-6 bg-gray-50 rounded-2xl">
-            <div class="flex items-center space-x-2 mb-4">
-              <svg class="h-5 w-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-              </svg>
-              <span class="text-sm text-gray-600">Paiement sécurisé par carte bancaire</span>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Numéro de carte *</label>
-              <input 
-                type="text" 
-                [(ngModel)]="paymentForm.cardNumber"
-                placeholder="1234 5678 9012 3456"
-                maxlength="19"
-                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Date d'expiration *</label>
-                <input 
-                  type="text" 
-                  [(ngModel)]="paymentForm.expiryDate"
-                  placeholder="MM/AA"
-                  maxlength="5"
-                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">CVV *</label>
-                <input 
-                  type="text" 
-                  [(ngModel)]="paymentForm.cvv"
-                  placeholder="123"
-                  maxlength="3"
-                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Nom sur la carte *</label>
-              <input 
-                type="text" 
-                [(ngModel)]="paymentForm.cardName"
-                placeholder="JEAN DUPONT"
-                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
-            </div>
-            
-            <div class="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-200">
-              <p class="text-xs text-blue-800">
-                <strong>Mode développement:</strong> Pour tester, utilisez n'importe quel numéro de carte valide. Le paiement sera simulé avec un taux de réussite de 95%.
-              </p>
-            </div>
-          </div>
-
           <!-- Wave Money Form (if wave selected) -->
-          <div *ngIf="selectedPaymentMethod?.id === 'wave'" class="mt-6 space-y-4 p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl border-2 border-blue-200">
-            <div class="flex items-center space-x-3 mb-4">
-              <img src="/assets/wave.png" alt="Wave Money" class="h-10 w-10 rounded-full object-cover">
-              <div>
-                <h4 class="font-bold text-gray-900">Wave Money</h4>
-                <p class="text-xs text-gray-600">Paiement mobile</p>
+          <div *ngIf="selectedPaymentMethod?.id === 'wave'" class="mt-6 space-y-4">
+            <div class="p-4 bg-amber-50 rounded-xl border-2 border-amber-300">
+              <div class="flex items-start space-x-3">
+                <div class="text-2xl">⚠️</div>
+                <div class="flex-1">
+                  <p class="text-sm font-bold text-amber-900 mb-2">Important : Paiement externe requis</p>
+                  <ol class="text-sm text-amber-800 space-y-1 list-decimal ml-4">
+                    <li>Après validation, une page Wave s'ouvrira dans un nouvel onglet</li>
+                    <li>Complétez le paiement sur la page Wave</li>
+                    <li>Votre commande sera confirmée une fois le paiement reçu</li>
+                  </ol>
+                  <p class="text-xs text-amber-700 mt-2 font-semibold">
+                    ⚠️ Votre panier ne sera pas vidé tant que le paiement n'est pas confirmé.
+                  </p>
+                </div>
               </div>
             </div>
-
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Numéro Wave *</label>
               <input 
                 type="tel" 
                 [(ngModel)]="paymentForm.mobileNumber"
                 placeholder="+221 77 123 45 67"
-                class="w-full px-4 py-3 rounded-xl border-2 border-blue-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all bg-white">
+                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
             </div>
           </div>
 
           <!-- Orange Money Form (if orange_money selected) -->
-          <div *ngIf="selectedPaymentMethod?.id === 'orange_money'" class="mt-6 space-y-4 p-6 bg-gradient-to-br from-orange-50 to-yellow-50 rounded-2xl border-2 border-orange-200">
-            <div class="flex items-center space-x-3 mb-4">
-              <img src="/assets/OM.png" alt="Orange Money" class="h-10 w-10 rounded-full object-cover">
-              <div>
-                <h4 class="font-bold text-gray-900">Orange Money</h4>
-                <p class="text-xs text-gray-600">Paiement mobile</p>
+          <div *ngIf="selectedPaymentMethod?.id === 'orange_money'" class="mt-6 space-y-4">
+            <div class="p-4 bg-amber-50 rounded-xl border-2 border-amber-300">
+              <div class="flex items-start space-x-3">
+                <div class="text-2xl">⚠️</div>
+                <div class="flex-1">
+                  <p class="text-sm font-bold text-amber-900 mb-2">Important : Paiement requis</p>
+                  <p class="text-sm text-amber-800">
+                    Vous devrez compléter le paiement via Orange Money. Votre commande sera confirmée une fois le paiement reçu.
+                  </p>
+                  <p class="text-xs text-amber-700 mt-2 font-semibold">
+                    ⚠️ Votre panier ne sera pas vidé tant que le paiement n'est pas confirmé.
+                  </p>
+                </div>
               </div>
             </div>
-
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Numéro Orange Money *</label>
               <input 
                 type="tel" 
                 [(ngModel)]="paymentForm.mobileNumber"
                 placeholder="+221 77 123 45 67"
-                class="w-full px-4 py-3 rounded-xl border-2 border-orange-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none transition-all bg-white">
-            </div>
-          </div>
-
-          <!-- Bank Transfer Info (if bank_transfer selected) -->
-          <div *ngIf="selectedPaymentMethod?.id === 'bank_transfer'" class="mt-6 space-y-4 p-6 bg-gray-50 rounded-2xl border-2 border-gray-200">
-            <div class="flex items-center space-x-3 mb-4">
-              <div class="h-10 w-10 bg-gray-600 rounded-full flex items-center justify-center">
-                <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-                </svg>
-              </div>
-              <div>
-                <h4 class="font-bold text-gray-900">Virement Bancaire</h4>
-                <p class="text-xs text-gray-600">Paiement par virement BCEAO</p>
-              </div>
-            </div>
-
-            <div class="p-4 bg-gray-100 rounded-xl">
-              <h5 class="font-semibold text-gray-900 mb-2">Coordonnées bancaires :</h5>
-              <div class="space-y-1 text-sm text-gray-700">
-                <p><strong>Banque:</strong> BCEAO Dakar</p>
-                <p><strong>Titulaire:</strong> ShopLux SARL</p>
-                <p><strong>IBAN:</strong> SN08 0000 0000 0000 0000 0000</p>
-                <p><strong>Code SWIFT:</strong> BCXXX00</p>
-                <p class="text-xs text-gray-500 mt-2">
-                  ⚠️ Veuillez inclure votre numéro de commande dans le libellé du virement
-                </p>
-              </div>
-            </div>
-
-            <div class="p-4 bg-yellow-50 rounded-xl border border-yellow-200">
-              <p class="text-xs text-yellow-900">
-                <strong>Note:</strong> Votre commande sera traitée après réception du virement (délai 1-3 jours ouvrés).
-              </p>
+                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
             </div>
           </div>
 

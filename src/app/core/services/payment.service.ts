@@ -67,11 +67,6 @@ export class PaymentService {
    */
   async processWavePayment(amount: number, phoneNumber: string, orderId: string): Promise<boolean> {
     try {
-      // TODO: Intégrer Wave API
-      // Documentation: https://developer.wave.com
-      
-      console.warn('⚠️ Wave Payment: Simulation mode');
-      
       // Créer la transaction dans la base de données
       const transactionId = `wave_${Date.now()}`;
       
@@ -81,8 +76,14 @@ export class PaymentService {
         'wave',
         amount,
         'XOF',
-        'processing'
+        'pending'
       );
+
+      // Rediriger vers le lien de paiement Wave
+      const wavePaymentUrl = environment.wave?.paymentUrl || 'https://pay.wave.com/m/M_sn_l1suFj7U33OF/c/sn/';
+      
+      // Ouvrir le lien Wave dans un nouvel onglet
+      window.open(wavePaymentUrl, '_blank');
 
       return true;
     } catch (error) {
@@ -330,7 +331,7 @@ export class PaymentService {
     return [
       {
         id: 'cash_on_delivery',
-        name: 'Paiement à la livraison 💵',
+        name: 'Paiement à la livraison',
         description: 'Payez en espèces à la réception',
         icon: '💵',
         icons: [],
@@ -339,7 +340,7 @@ export class PaymentService {
       },
       {
         id: 'wave',
-        name: 'Wave Money',
+        name: 'Wave',
         description: 'Paiement mobile',
         icon: '',
         icons: ['/assets/wave.png'],
@@ -356,24 +357,6 @@ export class PaymentService {
         enabled: true,
         provider: 'orange_money',
         countries: ['SN', 'CI', 'ML', 'BF']
-      },
-      {
-        id: 'card',
-        name: 'Carte bancaire',
-        description: 'Visa, Mastercard, American Express',
-        icon: '💳',
-        icons: [],
-        enabled: true,
-        provider: 'stripe'
-      },
-      {
-        id: 'bank_transfer',
-        name: 'Virement Bancaire',
-        description: 'Virement BCEAO (1-3 jours)',
-        icon: '🏦',
-        icons: [],
-        enabled: true,
-        provider: 'manual'
       }
     ];
   }

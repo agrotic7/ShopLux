@@ -4,13 +4,12 @@ import { RouterModule } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { Product } from '../../core/models/product.model';
 import { LazyImageComponent } from '../../shared/components/lazy-image/lazy-image.component';
-import { LoadingSkeletonComponent } from '../../shared/components/loading-skeleton/loading-skeleton.component';
 import { AnalyticsService } from '../../core/services/analytics.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, LazyImageComponent, LoadingSkeletonComponent],
+  imports: [CommonModule, RouterModule, LazyImageComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
