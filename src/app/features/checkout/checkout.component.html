@@ -9,34 +9,34 @@
     </div>
 
     <!-- Progress Steps -->
-    <div class="mb-12">
-      <div class="flex items-center justify-between max-w-3xl mx-auto">
+    <div class="mb-8 sm:mb-12">
+      <div class="flex items-center justify-between max-w-3xl mx-auto px-4">
         <div class="flex items-center flex-1">
-          <div class="flex items-center justify-center h-10 w-10 rounded-full bg-black text-white font-bold">1</div>
-          <div class="flex-1 h-1 bg-black mx-2"></div>
+          <div class="flex items-center justify-center h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-black text-white font-bold text-sm sm:text-base">1</div>
+          <div class="flex-1 h-0.5 sm:h-1 bg-black mx-1 sm:mx-2"></div>
         </div>
         <div class="flex items-center flex-1">
-          <div class="flex items-center justify-center h-10 w-10 rounded-full" 
+          <div class="flex items-center justify-center h-8 w-8 sm:h-10 sm:w-10 rounded-full text-sm sm:text-base" 
                [class.bg-black]="currentStep >= 2"
                [class.text-white]="currentStep >= 2"
                [class.bg-gray-300]="currentStep < 2"
                [class.text-gray-600]="currentStep < 2">2</div>
-          <div class="flex-1 h-1 mx-2"
+          <div class="flex-1 h-0.5 sm:h-1 mx-1 sm:mx-2"
                [class.bg-black]="currentStep >= 2"
                [class.bg-gray-300]="currentStep < 2"></div>
         </div>
         <div class="flex items-center">
-          <div class="flex items-center justify-center h-10 w-10 rounded-full"
+          <div class="flex items-center justify-center h-8 w-8 sm:h-10 sm:w-10 rounded-full text-sm sm:text-base"
                [class.bg-black]="currentStep >= 3"
                [class.text-white]="currentStep >= 3"
                [class.bg-gray-300]="currentStep < 3"
                [class.text-gray-600]="currentStep < 3">3</div>
         </div>
       </div>
-      <div class="flex items-center justify-between max-w-3xl mx-auto mt-2">
-        <span class="text-sm font-medium text-gray-900">Informations</span>
-        <span class="text-sm font-medium" [class.text-gray-900]="currentStep >= 2" [class.text-gray-500]="currentStep < 2">Livraison</span>
-        <span class="text-sm font-medium" [class.text-gray-900]="currentStep >= 3" [class.text-gray-500]="currentStep < 3">Paiement</span>
+      <div class="flex items-center justify-between max-w-3xl mx-auto mt-2 px-4">
+        <span class="text-xs sm:text-sm font-medium text-gray-900">Informations</span>
+        <span class="text-xs sm:text-sm font-medium" [class.text-gray-900]="currentStep >= 2" [class.text-gray-500]="currentStep < 2">Livraison</span>
+        <span class="text-xs sm:text-sm font-medium" [class.text-gray-900]="currentStep >= 3" [class.text-gray-500]="currentStep < 3">Paiement</span>
       </div>
     </div>
 
@@ -510,44 +510,44 @@
 
       <!-- Order Summary Sidebar -->
       <div class="lg:col-span-1">
-        <div class="bg-white rounded-3xl border border-gray-200 p-8 shadow-lg sticky top-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-6">Résumé de la commande</h2>
+        <div class="bg-white rounded-2xl sm:rounded-3xl border border-gray-200 p-4 sm:p-6 md:p-8 shadow-lg lg:sticky lg:top-8">
+          <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Résumé de la commande</h2>
 
           <!-- Cart Items -->
-          <div class="space-y-4 mb-6 max-h-96 overflow-y-auto">
-            <div *ngFor="let item of cartItems" class="flex items-center space-x-4 pb-4 border-b border-gray-200">
-              <div class="relative h-20 w-20 rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0">
+          <div class="space-y-3 sm:space-y-4 mb-4 sm:mb-6 max-h-64 sm:max-h-96 overflow-y-auto">
+            <div *ngFor="let item of cartItems" class="flex items-center gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-gray-200">
+              <div class="relative h-16 w-16 sm:h-20 sm:w-20 rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0">
                 <img [src]="item.product.image" [alt]="item.product.name" class="h-full w-full object-cover">
-                <div class="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-black text-white flex items-center justify-center text-xs font-bold">
+                <div class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-black text-white flex items-center justify-center text-[10px] sm:text-xs font-bold">
                   {{ item.quantity }}
                 </div>
               </div>
               <div class="flex-1 min-w-0">
-                <p class="font-medium text-gray-900 truncate">{{ item.product.name }}</p>
-                <p class="text-sm text-gray-600">{{ item.price | currency:'XOF':'symbol':'1.0-0':'fr' }}</p>
+                <p class="font-medium text-gray-900 text-sm sm:text-base truncate">{{ item.product.name }}</p>
+                <p class="text-xs sm:text-sm text-gray-600">{{ item.price | currency:'XOF':'symbol':'1.0-0':'fr' }}</p>
               </div>
-              <div class="font-bold text-gray-900">
+              <div class="font-bold text-gray-900 text-sm sm:text-base">
                 {{ (item.price * item.quantity) | currency:'XOF':'symbol':'1.0-0':'fr' }}
               </div>
             </div>
           </div>
 
           <!-- Coupon Code -->
-          <div class="mb-6">
-            <div class="flex space-x-2">
+          <div class="mb-4 sm:mb-6">
+            <div class="flex gap-2">
               <input 
                 type="text" 
                 [(ngModel)]="couponCode"
                 placeholder="Code promo"
-                class="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
+                class="flex-1 px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base rounded-lg sm:rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all">
               <button 
                 (click)="applyCoupon()"
-                class="px-6 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors font-medium">
+                class="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-gray-900 text-white rounded-lg sm:rounded-xl hover:bg-gray-800 active:bg-gray-950 transition-colors font-medium whitespace-nowrap touch-manipulation">
                 Appliquer
               </button>
             </div>
-            <p *ngIf="appliedCoupon" class="text-sm text-green-600 mt-2 flex items-center">
-              <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <p *ngIf="appliedCoupon" class="text-xs sm:text-sm text-green-600 mt-2 flex items-center">
+              <svg class="h-3 w-3 sm:h-4 sm:w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
               </svg>
               Code promo appliqué: {{ appliedCoupon.code }}
@@ -555,64 +555,64 @@
           </div>
 
           <!-- Price Summary -->
-          <div class="space-y-3 py-6 border-t border-gray-200">
-            <div class="flex justify-between text-gray-600">
+          <div class="space-y-2.5 sm:space-y-3 py-4 sm:py-6 border-t border-gray-200">
+            <div class="flex justify-between text-gray-600 text-sm sm:text-base">
               <span>Sous-total</span>
               <span class="font-medium">{{ getSubtotal() | currency:'XOF':'symbol':'1.0-0':'fr' }}</span>
             </div>
 
-            <div *ngIf="appliedCoupon" class="flex justify-between text-green-600">
-              <span>Réduction ({{ appliedCoupon.code }})</span>
-              <span class="font-medium">-{{ getDiscount() | currency:'XOF':'symbol':'1.0-0':'fr' }}</span>
+            <div *ngIf="appliedCoupon" class="flex justify-between text-green-600 text-sm sm:text-base">
+              <span class="truncate mr-2">Réduction ({{ appliedCoupon.code }})</span>
+              <span class="font-medium whitespace-nowrap">-{{ getDiscount() | currency:'XOF':'symbol':'1.0-0':'fr' }}</span>
             </div>
 
-            <div class="flex justify-between text-gray-600">
+            <div class="flex justify-between text-gray-600 text-sm sm:text-base">
               <span>Livraison</span>
-              <span class="font-medium" [class.text-green-600]="selectedShippingMethod?.price === 0">
+              <span class="font-medium text-right" [class.text-green-600]="selectedShippingMethod?.price === 0">
                 <ng-container *ngIf="selectedShippingMethod">
                   {{ selectedShippingMethod.price === 0 ? 'Gratuit' : currencyService.formatPrice(selectedShippingMethod.price) }}
-                  <span class="text-xs text-gray-500 ml-1">({{ selectedShippingMethod.name }})</span>
+                  <span class="block sm:inline text-[10px] sm:text-xs text-gray-500 sm:ml-1">({{ selectedShippingMethod.name }})</span>
                 </ng-container>
                 <ng-container *ngIf="!selectedShippingMethod">-</ng-container>
               </span>
             </div>
 
-            <div class="flex justify-between text-gray-600">
+            <div class="flex justify-between text-gray-600 text-sm sm:text-base">
               <span>TVA (20%)</span>
               <span class="font-medium">{{ getTax() | currency:'XOF':'symbol':'1.0-0':'fr' }}</span>
             </div>
 
-            <div class="flex justify-between text-xl font-bold text-gray-900 pt-3 border-t border-gray-200">
+            <div class="flex justify-between text-lg sm:text-xl font-bold text-gray-900 pt-3 border-t border-gray-200">
               <span>Total</span>
               <span>{{ getFinalTotal() | currency:'XOF':'symbol':'1.0-0':'fr' }}</span>
             </div>
           </div>
 
           <!-- Trust Badges -->
-          <div class="grid grid-cols-3 gap-3 pt-6 border-t border-gray-200">
+          <div class="grid grid-cols-3 gap-2 sm:gap-3 pt-4 sm:pt-6 border-t border-gray-200">
             <div class="text-center">
-              <div class="h-10 w-10 mx-auto mb-2 rounded-full bg-green-100 flex items-center justify-center">
-                <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="h-8 w-8 sm:h-10 sm:w-10 mx-auto mb-1 sm:mb-2 rounded-full bg-green-100 flex items-center justify-center">
+                <svg class="h-4 w-4 sm:h-5 sm:w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                 </svg>
               </div>
-              <p class="text-xs font-medium text-gray-900">Paiement sécurisé</p>
+              <p class="text-[10px] sm:text-xs font-medium text-gray-900 leading-tight">Paiement sécurisé</p>
             </div>
             <div class="text-center">
-              <div class="h-10 w-10 mx-auto mb-2 rounded-full bg-blue-100 flex items-center justify-center">
-                <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="h-8 w-8 sm:h-10 sm:w-10 mx-auto mb-1 sm:mb-2 rounded-full bg-blue-100 flex items-center justify-center">
+                <svg class="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                 </svg>
               </div>
-              <p class="text-xs font-medium text-gray-900">Satisfait ou remboursé</p>
+              <p class="text-[10px] sm:text-xs font-medium text-gray-900 leading-tight">Satisfait ou remboursé</p>
             </div>
             <div class="text-center">
-              <div class="h-10 w-10 mx-auto mb-2 rounded-full bg-purple-100 flex items-center justify-center">
-                <svg class="h-5 w-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="h-8 w-8 sm:h-10 sm:w-10 mx-auto mb-1 sm:mb-2 rounded-full bg-purple-100 flex items-center justify-center">
+                <svg class="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
               </div>
-              <p class="text-xs font-medium text-gray-900">Livraison rapide</p>
+              <p class="text-[10px] sm:text-xs font-medium text-gray-900 leading-tight">Livraison rapide</p>
             </div>
           </div>
         </div>

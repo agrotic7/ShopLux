@@ -20,6 +20,9 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-padding-top: 0 !important;
+  /* Prevent text size adjustment on mobile */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
 }
 
 html, body {
@@ -28,6 +31,13 @@ html, body {
   overflow-x: hidden;
   position: relative;
   scroll-behavior: auto !important; /* Force instant scroll */
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 640px) {
+  html, body {
+    font-size: 16px; /* Prevent zoom on input focus */
+  }
 }
 
 body {
@@ -640,6 +650,36 @@ app-lazy-image {
 .touch-friendly {
   min-height: 44px !important;
   min-width: 44px !important;
+}
+
+/* Enhanced touch manipulation */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* Prevent double-tap zoom on buttons */
+button, 
+a {
+  touch-action: manipulation;
+}
+
+/* Responsive spacing utilities */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  /* Reduce spacing on mobile */
+  .space-y-8 > * + * {
+    margin-top: 1.5rem !important;
+  }
+
+  .space-y-12 > * + * {
+    margin-top: 2rem !important;
+  }
 }
 
 /* Safe area pour iPhone X et plus */
