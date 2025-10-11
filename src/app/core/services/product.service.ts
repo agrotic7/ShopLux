@@ -269,5 +269,25 @@ export class ProductService {
       isActive: data.is_active
     };
   }
+
+  async searchProducts(query: string, limit: number = 10): Promise<Product[]> {
+    try {
+      const { data, error } = await this.supabase.client
+        .from('products')
+        .select(`
+          *,
+          category:categories(*)
+        `)
+        .eq('status', 'active')
+        .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
+        .limit(limit);
+
+      if (error) throw error;
+      return data ? this.mapProducts(data) : [];
+    } catch (error) {
+      console.error('Error searching products:', error);
+      return [];
+    }
+  }
 }
 

@@ -291,3 +291,9 @@ Pour référence :
 - ✅ Workflow paiements - Validation manuelle
 
 **Prêt à déployer en production ? OUI !** 🚀
+
+
+
+
+
+

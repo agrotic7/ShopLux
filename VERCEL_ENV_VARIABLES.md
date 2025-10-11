@@ -261,3 +261,4 @@ Si vous avez des questions sur la configuration :
 **Version :** 1.0  
 **Statut :** ✅ Prêt pour configuration
 
+

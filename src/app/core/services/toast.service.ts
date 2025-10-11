@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 export interface Toast {
   id: string;
   message: string;
+  description?: string;
   type: 'success' | 'error' | 'warning' | 'info';
   duration?: number;
 }

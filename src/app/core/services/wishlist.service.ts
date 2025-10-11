@@ -76,12 +76,12 @@ export class WishlistService {
       }
 
       // Vérifier si le produit est déjà dans la wishlist
-      const { data: existing } = await this.supabase.client
+      const { data: existing, error: checkError } = await this.supabase.client
         .from('wishlists')
         .select('id')
         .eq('user_id', user.id)
         .eq('product_id', productId)
-        .single();
+        .maybeSingle();
 
       if (existing) {
         return { success: false, error: 'Produit déjà dans la wishlist' };

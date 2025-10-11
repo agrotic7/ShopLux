@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../../core/services/product.service';
 import { Product, ProductFilter, Category } from '../../../core/models/product.model';
@@ -8,13 +8,15 @@ import { CartService } from '../../../core/services/cart.service';
 import { CurrencyService } from '../../../core/services/currency.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AnalyticsService } from '../../../core/services/analytics.service';
+import { ProductCompareService } from '../../../core/services/product-compare.service';
 import { LazyImageComponent } from '../../../shared/components/lazy-image/lazy-image.component';
 import { LoadingSkeletonComponent } from '../../../shared/components/loading-skeleton/loading-skeleton.component';
+import { QuickViewModalComponent } from '../../../shared/components/quick-view-modal/quick-view-modal.component';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, LazyImageComponent, LoadingSkeletonComponent],
+  imports: [CommonModule, RouterModule, FormsModule, LazyImageComponent, LoadingSkeletonComponent, QuickViewModalComponent],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss']
 })
@@ -22,6 +24,13 @@ export class ProductListComponent implements OnInit {
   products: Product[] = [];
   categories: Category[] = [];
   isLoading = true;
+  
+  // Quick View Modal
+  showQuickView = false;
+  selectedProduct: Product | null = null;
+  
+  // Product Compare
+  compareCount = 0;
   
   filter: ProductFilter = {
     page: 1,
@@ -47,12 +56,19 @@ export class ProductListComponent implements OnInit {
     private productService: ProductService,
     private cartService: CartService,
     private route: ActivatedRoute,
+    private router: Router,
     public currencyService: CurrencyService,
     private toastService: ToastService,
-    private analyticsService: AnalyticsService
+    private analyticsService: AnalyticsService,
+    public compareService: ProductCompareService
   ) {}
 
   async ngOnInit() {
+    // Subscribe to compare count
+    this.compareService.compareProducts$.subscribe(products => {
+      this.compareCount = products.length;
+    });
+    
     // Load categories first
     await this.loadCategories();
     
@@ -270,6 +286,42 @@ export class ProductListComponent implements OnInit {
     if (searchTerm.trim()) {
       this.analyticsService.trackSearch(searchTerm, this.products.length);
     }
+  }
+
+  openQuickView(product: Product, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.selectedProduct = product;
+    this.showQuickView = true;
+  }
+
+  closeQuickView(): void {
+    this.showQuickView = false;
+    this.selectedProduct = null;
+  }
+
+  toggleCompare(product: Product, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    if (this.compareService.isInComparison(product.id)) {
+      this.compareService.removeProduct(product.id);
+      this.toastService.info('Produit retiré de la comparaison');
+    } else {
+      if (this.compareService.addProduct(product)) {
+        this.toastService.success('Produit ajouté à la comparaison');
+      } else {
+        this.toastService.warning('Vous pouvez comparer jusqu\'à 4 produits seulement');
+      }
+    }
+  }
+
+  goToCompare(): void {
+    this.router.navigate(['/products/compare']);
+  }
+
+  isInComparison(productId: string): boolean {
+    return this.compareService.isInComparison(productId);
   }
 }
 

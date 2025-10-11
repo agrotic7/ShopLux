@@ -234,3 +234,7 @@ Le site ShopLux est maintenant **100% responsive** et optimisé pour tous les ap
 - Navigation intuitive
 - Meilleure performance
 
+
+
+
+

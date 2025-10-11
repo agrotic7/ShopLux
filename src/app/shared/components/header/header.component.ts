@@ -8,11 +8,13 @@ import { ProductService } from '../../../core/services/product.service';
 import { User } from '../../../core/models/user.model';
 import { Category } from '../../../core/models/product.model';
 import { NotificationsComponent } from '../notifications/notifications.component';
+import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
+import { SearchAutocompleteComponent } from '../search-autocomplete/search-autocomplete.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, NotificationsComponent],
+  imports: [CommonModule, RouterModule, FormsModule, NotificationsComponent, ThemeToggleComponent, SearchAutocompleteComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })

@@ -37,7 +37,7 @@
       <!-- Product Image -->
       <div class="relative aspect-square overflow-hidden bg-gray-100 cursor-pointer" [routerLink]="['/products', item.product?.slug]">
         <img 
-          [src]="item.product?.images?.[0] || '/assets/logo.png'" 
+          [src]="getProductImage(item.product)" 
           [alt]="item.product?.name" 
           class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500">
         

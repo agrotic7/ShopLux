@@ -65,4 +65,19 @@ export class WishlistComponent implements OnInit {
     if (!product.compareAtPrice || product.compareAtPrice <= product.price) return 0;
     return Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100);
   }
+
+  getProductImage(product: Product | undefined): string {
+    if (!product || !product.images || product.images.length === 0) {
+      return '/assets/logo.png';
+    }
+    
+    const firstImage = product.images[0];
+    
+    // Handle both string URLs and objects with url property
+    if (typeof firstImage === 'string') {
+      return firstImage;
+    }
+    
+    return (firstImage as any)?.url || '/assets/logo.png';
+  }
 }
